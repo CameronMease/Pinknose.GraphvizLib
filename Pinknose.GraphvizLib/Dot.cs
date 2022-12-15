@@ -5,7 +5,8 @@ using System.Reflection;
 
 namespace Pinknose.GraphvizLib
 {
-    public enum GraphvizEngine { Dot, Fdp}
+    public enum GraphvizEngine
+    { Dot, Fdp }
 
     public static class Dot
     {
@@ -69,7 +70,7 @@ namespace Pinknose.GraphvizLib
                     Arguments = $"-T{type}",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
-                    RedirectStandardError =  true,                    
+                    RedirectStandardError = true,
                 }
             };
 
@@ -81,12 +82,10 @@ namespace Pinknose.GraphvizLib
 
             proc.OutputDataReceived += (sender, e) =>
             {
-
             };
 
             try
             {
-
                 proc.Start();
 
                 proc.StandardInput.WriteLine(dot);
@@ -108,8 +107,6 @@ namespace Pinknose.GraphvizLib
 
                 await proc.WaitForExitAsync();
 
-
-
                 if (errorRunningProcess)
                 {
                     Debug.WriteLine("Error occurred while running DOT process.");
@@ -117,9 +114,8 @@ namespace Pinknose.GraphvizLib
 
                 return memoryStream;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
             }
 
             throw new NotImplementedException();
