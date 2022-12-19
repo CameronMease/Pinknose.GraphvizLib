@@ -15,11 +15,13 @@ namespace Pinknose.GraphvizLib
         {
             if (!Children.Contains(e.Item.Source))
             {
-                throw new NotImplementedException("Edge is being added but source node is not a child of this graph.");
+                //TODO: Revisit
+                //throw new NotImplementedException("Edge is being added but source node is not a child of this graph.");
             }
             else if (!Children.Contains(e.Item.Destination))
             {
-                throw new NotImplementedException("Edge is being added but destination node is not a child of this graph.");
+                //TODO: Revisit
+                //throw new NotImplementedException("Edge is being added but destination node is not a child of this graph.");
             }
         }
 
