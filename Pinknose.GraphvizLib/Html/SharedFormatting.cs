@@ -6,13 +6,17 @@ namespace Pinknose.GraphvizLib.Html
     {
         #region Methods
 
-        public static string FormatLatex(string latex)
+        public static string FormatImage(string filename) => $"<IMG SRC=\"{filename}\"/>";
+
+        public static string FormatLatex(string latex) => FormatLatexAsync(latex).GetAwaiter().GetResult();
+
+        public static async Task<string> FormatLatexAsync(string latex)
         {
             var filename = Path.ChangeExtension(Path.GetTempFileName(), "png");
 
-            LatexMathRenderer.RenderToDisk(latex, filename);
+            await LatexMathRenderer.RenderToDiskAsync(latex, filename);
 
-            return $"<IMG SRC=\"{filename}\"/>";
+            return FormatImage(filename);
         }
 
         public static string FormatLineBreak() => "<BR/>";

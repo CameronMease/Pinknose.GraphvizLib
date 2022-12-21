@@ -29,10 +29,10 @@ namespace Pinknose.GraphvizLib.Html
             return bytes;
         }
 
-        internal static async void RenderToDisk(string latex, string filename)
+        internal static async Task RenderToDiskAsync(string latex, string filename)
         {
-            var bytes = RenderAsync(latex).GetAwaiter().GetResult();
-            File.WriteAllBytes(filename, bytes);
+            var bytes = await RenderAsync(latex);
+            await File.WriteAllBytesAsync(filename, bytes);
         }
 
         #endregion Methods

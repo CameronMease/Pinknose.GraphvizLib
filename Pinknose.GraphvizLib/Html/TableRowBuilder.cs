@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Pinknose.GraphvizLib.Html.Attributes;
+using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
 {
@@ -30,9 +31,11 @@ namespace Pinknose.GraphvizLib.Html
             return _parent;
         }
 
-        public TableCellBuilder<TableRowBuilder<TParent>> StartCell(Alignment alignment = Alignment.Center, string? portName = null, int? rowSpan = null, int? columnSpan = null) =>
-            new TableCellBuilder<TableRowBuilder<TParent>>(this, alignment: alignment, portName: portName, rowSpan: rowSpan, columnSpan : columnSpan);
+        public TableCellBuilder<TableRowBuilder<TParent>> StartCell(params ICellAttribute[] attributes) =>
+            new TableCellBuilder<TableRowBuilder<TParent>>(this, attributes);
 
+
+        
         #endregion Methods
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Pinknose.GraphvizLib.Html.Attributes;
+using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
 {
@@ -6,31 +7,23 @@ namespace Pinknose.GraphvizLib.Html
     {
         #region Fields
 
+        private static string? IconsPath = null;
+
         private readonly TParent _parent;
 
         #endregion Fields
 
         #region Constructors
 
-        internal TableCellBuilder(TParent parent, Alignment alignment, string? portName, int? rowSpan, int? columnSpan) : base()
+        internal TableCellBuilder(TParent parent, params ICellAttribute[] attributes) : base()
         {
             _parent = parent;
 
-            StringBuilder.Append($"<TD ALIGN=\"{((Enum)alignment).GetDisplayValue()}\"");
-            
-            if (portName!= null)
-            {
-                StringBuilder.Append($" PORT=\"{portName}\"");
-            }
+            StringBuilder.Append($"<TD ");
 
-            if (rowSpan != null)
+            foreach (var attribute in attributes)
             {
-                StringBuilder.Append($" ROWSPAN=\"{rowSpan}\"");
-            }
-
-            if (columnSpan != null)
-            {
-                StringBuilder.Append($" COLSPAN=\"{columnSpan}\"");
+                StringBuilder.Append($" {attribute.ToString()}");
             }
 
             StringBuilder.Append(">");
@@ -40,8 +33,14 @@ namespace Pinknose.GraphvizLib.Html
 
         #region Methods
 
-        public TableCellBuilder<TParent> AppendCell(Alignment alignment = Alignment.Center, string? portName = null, int? rowSpan = null, int? columnSpan = null) =>
-            new TableCellBuilder<TParent>(_parent, alignment: alignment, portName: portName, rowSpan: rowSpan, columnSpan : columnSpan);
+        public TableCellBuilder<TParent> AppendCell(params ICellAttribute[] attributes) =>
+            new TableCellBuilder<TParent>(_parent, attributes);
+
+        public TableCellBuilder<TParent> AppendImage(string filename)
+        {
+            StringBuilder.Append(SharedFormatting.FormatImage(filename));
+            return this;
+        }
 
         public TableCellBuilder<TParent> AppendLatexImage(string latex)
         {
@@ -61,11 +60,27 @@ namespace Pinknose.GraphvizLib.Html
             return this;
         }
 
+        public TableCellBuilder<TParent> AppendWarningIcon() => AppendIcon("StatusWarning.png");
+
         public TParent EndCell()
         {
             StringBuilder.Append("</TD>");
             _parent.AppendRawString(StringBuilder.ToString());
             return _parent;
+        }
+
+        private TableCellBuilder<TParent> AppendIcon(string filename)
+        {
+            if (IconsPath == null)
+            {
+                IconsPath = Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "Html", "Icons");
+            }
+
+            var fullPath = Path.Combine(IconsPath, filename);
+
+            AppendImage(fullPath);
+
+            return this;
         }
 
         #endregion Methods

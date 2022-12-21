@@ -22,56 +22,16 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using Pinknose.GraphvizLib.Attributes;
-using System.Text;
+using Pinknose.GraphvizLib.Atttributes;
 
 namespace Pinknose.GraphvizLib
 {
-    public class Node : GraphvizElement
+    public enum VerticalJustification
     {
-        #region Properties
+        [DisplayValue("t")]
+        Top,
 
-        [AttributeName("color")]
-        public Color? Color { get; set; } = null;
-
-        [AttributeName("fillcolor")]
-        public Color? FillColor { get; set; } = null;
-
-        [AttributeName("fixedsize")]
-        public bool? FixedSize { get; set; } = null;
-
-        [AttributeName("fontcolor")]
-        public Color? FontColor { get; set; } = null;
-
-        [AttributeName("c")]
-        public double LineWidth { get; set; } = 1.0;
-
-        [AttributeName("shape")]
-        public Shape? Shape { get; set; } = null;
-
-        [AttributeName("style")]
-        public NodeStyle? Style { get; set; } = null;
-
-        [AttributeName("width")]
-        public double? Width { get; set; } = null;
-
-        #endregion Properties
-
-        #region Methods
-
-        internal override string RenderDot(Graph graph, int indent)
-        {
-            string indentText = new string(' ', indent);
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append($"{indentText}{this.Id} ");
-
-            sb.AppendLine($"{this.RenderSingleLineAttributes()};");
-
-            return sb.ToString();
-        }
-
-        #endregion Methods
+        [DisplayValue("b")]
+        Bottom
     }
 }

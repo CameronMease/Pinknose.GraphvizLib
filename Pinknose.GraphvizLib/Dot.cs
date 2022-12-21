@@ -37,6 +37,32 @@ namespace Pinknose.GraphvizLib
             return bitmap;
         }
 
+        public static async Task RenderToPngFileAsync(Graph graph, GraphvizEngine engine, string filename)
+        {
+            using var stream = await RenderAsync(graph, "png", engine).ConfigureAwait(false);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using var filestream = File.Create(filename);
+
+            await stream.CopyToAsync(filestream);
+
+            filestream.Close();
+        }
+
+        public static async Task RenderToSvgFileAsync(Graph graph, GraphvizEngine engine, string filename)
+        {
+            using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using var filestream = File.Create(filename);
+
+            await stream.CopyToAsync(filestream);
+
+            filestream.Close();
+        }
+
         public static async Task<SvgDocument> RenderSvgAsync(Graph graph, GraphvizEngine engine)
         {
             using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
@@ -67,7 +93,7 @@ namespace Pinknose.GraphvizLib
                     UseShellExecute = false,
                     WorkingDirectory = DotBinPath?.Value,
                     FileName = Path.Combine(DotBinPath?.Value, dotExecutableName),
-                    Arguments = $"-T{type}",
+                    Arguments = $@"-T{type}",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -114,7 +140,7 @@ namespace Pinknose.GraphvizLib
 
                 return memoryStream;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

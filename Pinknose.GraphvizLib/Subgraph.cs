@@ -24,8 +24,8 @@ namespace Pinknose.GraphvizLib
         [AttributeName("fontcolor")]
         public Color? FontColor { get; set; } = null;
 
-        [AttributeName("fontsize")]
-        public double? FontSize { get; set; } = null;
+        //[AttributeName("fontsize")]
+        //public double? FontSize { get; set; } = null;
 
         public Graph Graph { get; }
         public override string Id => (IsCluster ? "cluster_" : "") + base.Id;

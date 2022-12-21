@@ -1,4 +1,5 @@
 ﻿using Pinknose.GraphvizLib.Atttributes;
+using Pinknose.GraphvizLib.Html.Attributes;
 using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
@@ -46,7 +47,7 @@ namespace Pinknose.GraphvizLib.Html
             return this;
         }
 
-        public TableBuilder<HtmlBuilder> StartTable(int borderSize = 1) => new TableBuilder<HtmlBuilder>(this, borderSize: borderSize);
+        public TableBuilder<HtmlBuilder> StartTable(params ITableAttribute[] attributes) => new TableBuilder<HtmlBuilder>(this, attributes);
 
         public override string ToString()
         {

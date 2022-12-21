@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Pinknose.GraphvizLib.Html.Attributes;
+using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
 {
@@ -12,11 +13,18 @@ namespace Pinknose.GraphvizLib.Html
 
         #region Constructors
 
-        internal TableBuilder(TParent parent, int borderSize = 1) : base()
+        internal TableBuilder(TParent parent, params ITableAttribute[] attributes) : base()
         {
             _parent = parent;
 
-            StringBuilder.Append($"<TABLE BORDER=\"{borderSize}\">");
+            StringBuilder.Append($"<TABLE");
+
+            foreach ( var attribute in attributes )
+            {
+                StringBuilder.Append($" {attribute.ToString()}");
+            }
+
+            StringBuilder.Append(">");
         }
 
         #endregion Constructors
