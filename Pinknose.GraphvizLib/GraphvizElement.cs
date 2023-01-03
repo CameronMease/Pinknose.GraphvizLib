@@ -21,6 +21,9 @@ namespace Pinknose.GraphvizLib
         [AttributeName("label")]
         public Label? Label { get; set; } = null;
 
+        [AttributeName("texlbl")]
+        public Label? TexLabel { get; set; } = null;
+
         #endregion Properties
 
         #region Methods
