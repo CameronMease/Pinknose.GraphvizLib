@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.HtmlAttribute" Collapsed="true">
+    <Position X="9.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\HtmlAttribute.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.Alignment" Collapsed="true">
+    <Position X="0.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAACACAAAAIAAA=</HashCode>
+      <FileName>Html\Attributes\Alignment.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.BorderSize" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\BorderSize.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.ColumnSpan" Collapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\ColumnSpan.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.FixedSize" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\FixedSize.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.FontColor" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\FontColor.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.PortName" Collapsed="true">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\PortName.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.RowSpan" Collapsed="true">
+    <Position X="14.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\RowSpan.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.VerticalAlignment" Collapsed="true">
+    <Position X="16.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAQAAAAIAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\VerticalAlignment.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.Attributes.Width" Collapsed="true">
+    <Position X="18.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\Attributes\Width.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.HtmlBuilder" Collapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAABEAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\HtmlBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.HtmlBuilderBase" Collapsed="true">
+    <Position X="15.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAACgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\HtmlBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.LatexMathRenderer" Collapsed="true">
+    <Position X="22.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Html\LatexMathRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.SharedFormatting" Collapsed="true">
+    <Position X="24.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAABAAAAAAAABAAAgAAAgA=</HashCode>
+      <FileName>Html\SharedFormatting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.TableBuilder&lt;TParent&gt;" Collapsed="true">
+    <Position X="18" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAQAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\TableBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.TableCellBuilder&lt;TParent&gt;" Collapsed="true">
+    <Position X="11.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAoAAAAABAAAAAAAQQAAAQQAAAABAAAACAAAA=</HashCode>
+      <FileName>Html\TableCellBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.TableFontBuilder&lt;TParent&gt;" Collapsed="true">
+    <Position X="15.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\TableFontBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Html.TableRowBuilder&lt;TParent&gt;" Collapsed="true">
+    <Position X="20.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Html\TableRowBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Pinknose.GraphvizLib.Html.HtmlTextFormat" Collapsed="true">
+    <Position X="22.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACCAAAAAAASAAAIgAAAAAAAAAAAAAAAAAAAEQAAA=</HashCode>
+      <FileName>Html\HtmlBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

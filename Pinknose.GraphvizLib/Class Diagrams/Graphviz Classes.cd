@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Pinknose.GraphvizLib.Digraph" Collapsed="true">
+    <Position X="6.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Digraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Dot" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAgAAAAAAAAIAAAAAAAAAAAAAAAACBAQAAA=</HashCode>
+      <FileName>Dot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.DotRenderer" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAgACAAAAAABAAAIAAAAAQAAAAAAA=</HashCode>
+      <FileName>DotRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Edge" Collapsed="true">
+    <Position X="8.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEAIAAEgAAAgAAACAAAgAgAgAAAAAEBIAAgAAAAAA=</HashCode>
+      <FileName>Edge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.AddingItemEventArgs&lt;T&gt;" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ExtendedList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.ExtendedList&lt;T&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAABEQAAAABAQAAAAAAAAEQAAAAABQIAA=</HashCode>
+      <FileName>ExtendedList.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.GraphvizExtensions" Collapsed="true">
+    <Position X="16.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAgAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Graph" Collapsed="true">
+    <Position X="6.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAGAgKAAAAAABAAAAAAMAAAICQgAQAAAAAAAABAYAAA=</HashCode>
+      <FileName>Graph.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.GraphvizElement" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAEAAAAAAAAAAAAgEAAAAABAAAAAAAAgAAAAA=</HashCode>
+      <FileName>GraphvizElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Label" Collapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAIAAAAAAIAAEI=</HashCode>
+      <FileName>Label.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Node" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEAIAAAAAAAAAAAAAAAEAgAAAAAAAABAAAgAgAAAA=</HashCode>
+      <FileName>Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.StringExtensions" Collapsed="true">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>StringExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Pinknose.GraphvizLib.Subgraph" Collapsed="true">
+    <Position X="2" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAIAAAAAAAAAAAAAEAABgAACAAAgABAAAgAAAAAA=</HashCode>
+      <FileName>Subgraph.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Pinknose.GraphvizLib.IParent" Collapsed="true">
+    <Position X="11.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>IChild.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Pinknose.GraphvizLib.Color" Collapsed="true">
+    <Position X="14.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>//+/5/X/4/////v/95/Td9e//cVx1lab6P9vvf/d990=</HashCode>
+      <FileName>Color.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.GraphvizEngine" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dot.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.HorizontalJustification" Collapsed="true">
+    <Position X="13" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACACAAAAIAAA=</HashCode>
+      <FileName>HorizontalJustification.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.PortPosition" Collapsed="true">
+    <Position X="16.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCCABABAAAAAAAAAAAAIAAAEAAAAAAAAAAAAAAJAAQ=</HashCode>
+      <FileName>PortPosition.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.RankDirection" Collapsed="true">
+    <Position X="11.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAEAAAAAAAAAAAAAAAAEAAAAAAAAAEAAA=</HashCode>
+      <FileName>RankDirection.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.Shape" Collapsed="true">
+    <Position X="13" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoAiABaAAAiysYBBIRgCwBBEgooEuAEggZgACMApCE=</HashCode>
+      <FileName>Shape.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.ArrowType" Collapsed="true">
+    <Position X="11.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAEAAAAAAACIoCAAAIAAAAAACCIZAgAABAAAAAkAAQA=</HashCode>
+      <FileName>Styles.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.ClusterStyle" Collapsed="true">
+    <Position X="13" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAABAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Styles.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.EdgeStyle" Collapsed="true">
+    <Position X="16.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABACAAAAAAAAAABAAAACAIAAAAQAAAAAA=</HashCode>
+      <FileName>Styles.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.NodeStyle" Collapsed="true">
+    <Position X="14.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAABACAAAEAAAAAABAAQACAIAAAAAAAAAAA=</HashCode>
+      <FileName>Styles.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.SplineType" Collapsed="true">
+    <Position X="14.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAIAAAAAAEAAAAAAAAAAgAAAAAABAAA=</HashCode>
+      <FileName>Styles.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Pinknose.GraphvizLib.VerticalJustification" Collapsed="true">
+    <Position X="16.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VerticalJustification.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

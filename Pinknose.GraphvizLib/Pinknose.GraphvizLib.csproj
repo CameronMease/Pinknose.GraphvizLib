@@ -397,8 +397,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Class Graphs\" />
-  </ItemGroup>
-
 </Project>
