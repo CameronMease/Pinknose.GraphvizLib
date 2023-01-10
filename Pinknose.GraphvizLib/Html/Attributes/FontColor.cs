@@ -1,18 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pinknose.GraphvizLib.Html.Attributes
+﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class FontColor : HtmlAttribute, IFontAttribute
+    public sealed class FontColor : HtmlAttribute, IFontAttribute
     {
+        #region Constructors
+
+        private FontColor(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
         public override string Name => "COLOR";
 
-        public static FontColor Set(Color color) 
-        { 
-            return new FontColor() { Value = color.GetDisplayValue() };
+        #endregion Properties
+
+        #region Methods
+
+        public static FontColor Set(Color color)
+        {
+            return new FontColor(color.GetDisplayValue());
         }
+
+        #endregion Methods
     }
 }

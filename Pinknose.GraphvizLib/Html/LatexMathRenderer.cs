@@ -11,7 +11,7 @@ namespace Pinknose.GraphvizLib.Html
         {
             var painter = new MathPainter() { LaTeX = latex };
 
-            using var image = painter.DrawAsStream(format: SKEncodedImageFormat.Png);
+            using var image = painter.DrawAsStream(format: SKEncodedImageFormat.Png) ?? throw new ArgumentNullException();
 
             byte[] bytes = new byte[image.Length];
 

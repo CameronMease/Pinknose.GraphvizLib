@@ -16,7 +16,7 @@ namespace Pinknose.GraphvizLib
 
         #region Properties
 
-        public List<GraphvizElement> Children { get; } = new List<GraphvizElement>();
+        public HashSet<GraphvizElement> Children { get; } = new();
 
         [AttributeName("color")]
         public Color? Color { get; set; } = null;

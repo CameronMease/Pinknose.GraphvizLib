@@ -1,38 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pinknose.GraphvizLib.Html.Attributes
+﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
+    public interface ICellAttribute : IHtmlAttribute
+    {
+    }
+
+    public interface IFontAttribute : IHtmlAttribute
+    { }
+
     public interface IHtmlAttribute
     {
+        #region Properties
+
         public string Name { get; }
         public string Value { get; }
+
+        #endregion Properties
+
+        #region Methods
+
         public string ToString();
+
+        #endregion Methods
     }
 
     public interface ITableAttribute : IHtmlAttribute
     {
-
     }
-
-    public interface ICellAttribute : IHtmlAttribute
-    {
-
-    }
-
-    public interface IFontAttribute : IHtmlAttribute { }
-
 
     public abstract class HtmlAttribute : IHtmlAttribute
     {
+        #region Constructors
+
+        public HtmlAttribute(string value)
+        {
+            Value = value;
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
         public abstract string Name { get; }
 
-        public string Value { get; protected init; }
+        public string Value { get; }
+
+        #endregion Properties
+
+        #region Methods
 
         public override string ToString() => $"{Name}=\"{Value}\"";
 
+        #endregion Methods
     }
 }

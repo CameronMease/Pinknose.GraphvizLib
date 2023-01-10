@@ -1,23 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pinknose.GraphvizLib.Html.Attributes
+﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class BorderSize : HtmlAttribute, ITableAttribute, ICellAttribute
+    public sealed class BorderSize : HtmlAttribute, ITableAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private BorderSize(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
         public override string Name => "BORDER";
+
+        #endregion Properties
+
+        #region Methods
 
         public static BorderSize Set(int size)
         {
-            if (size <0 || size > 127)
+            if (size < 0 || size > 127)
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
 
-            return new BorderSize() { Value = size.ToString() };
+            return new BorderSize(size.ToString());
         }
+
+        #endregion Methods
     }
 }

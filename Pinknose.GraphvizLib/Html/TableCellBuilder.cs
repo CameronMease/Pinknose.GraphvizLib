@@ -26,7 +26,7 @@ namespace Pinknose.GraphvizLib.Html
                 StringBuilder.Append($" {attribute.ToString()}");
             }
 
-            StringBuilder.Append(">");
+            StringBuilder.Append('>');
         }
 
         #endregion Constructors
@@ -34,7 +34,7 @@ namespace Pinknose.GraphvizLib.Html
         #region Methods
 
         public TableCellBuilder<TParent> AppendCell(params ICellAttribute[] attributes) =>
-            new TableCellBuilder<TParent>(_parent, attributes);
+            new(_parent, attributes);
 
         public TableCellBuilder<TParent> AppendImage(string filename)
         {
@@ -71,10 +71,7 @@ namespace Pinknose.GraphvizLib.Html
 
         private TableCellBuilder<TParent> AppendIcon(string filename)
         {
-            if (IconsPath == null)
-            {
-                IconsPath = Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "Html", "Icons");
-            }
+            IconsPath ??= Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "Html", "Icons");
 
             var fullPath = Path.Combine(IconsPath, filename);
 

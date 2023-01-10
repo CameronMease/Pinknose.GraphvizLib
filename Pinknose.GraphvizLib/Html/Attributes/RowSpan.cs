@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pinknose.GraphvizLib.Html.Attributes
+﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class RowSpan : HtmlAttribute, ICellAttribute
+    public sealed class RowSpan : HtmlAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private RowSpan(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
         public override string Name => "ROWSPAN";
+
+        #endregion Properties
+
+        #region Methods
 
         public static RowSpan Set(int span)
         {
@@ -17,7 +25,9 @@ namespace Pinknose.GraphvizLib.Html.Attributes
                 throw new ArgumentOutOfRangeException(nameof(span));
             }
 
-            return new RowSpan() { Value = span.ToString() };
+            return new RowSpan(span.ToString());
         }
+
+        #endregion Methods
     }
 }

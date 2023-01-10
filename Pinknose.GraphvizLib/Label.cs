@@ -8,7 +8,7 @@ namespace Pinknose.GraphvizLib
         #region Fields
 
         private static TextEncoderSettings TextEncoderSettings = new TextEncoderSettings();
-        private string? _text = null;
+        private string _text = string.Empty;
 
         #endregion Fields
 
@@ -35,6 +35,8 @@ namespace Pinknose.GraphvizLib
             _text = builder.ToString(),
             IsHtml = true
         };
+
+        public override int GetHashCode() => _text.GetHashCode();
 
         public override string ToString() => _text;
 

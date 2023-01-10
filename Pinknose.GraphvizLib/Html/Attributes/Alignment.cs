@@ -1,12 +1,20 @@
 ﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class Alignment : HtmlAttribute, ITableAttribute, ICellAttribute
+    public sealed class Alignment : HtmlAttribute, ITableAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private Alignment(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
         #region Properties
 
-        public static Alignment Center => new Alignment() { Value = "CENTER" };
-        public static Alignment Left => new Alignment() { Value = "LEFT" };
-        public static Alignment Right => new Alignment() { Value = "RIGHT" };
+        public static Alignment Center => new("CENTER");
+        public static Alignment Left => new("LEFT");
+        public static Alignment Right => new("RIGHT");
         public override string Name => "ALIGN";
 
         #endregion Properties

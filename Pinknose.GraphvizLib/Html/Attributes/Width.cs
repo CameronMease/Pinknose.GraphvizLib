@@ -1,7 +1,15 @@
 ﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class Width : HtmlAttribute, ITableAttribute, ICellAttribute
+    public sealed class Width : HtmlAttribute, ITableAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private Width(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
         #region Properties
 
         public override string Name => "WIDTH";
@@ -17,7 +25,7 @@
                 throw new ArgumentOutOfRangeException(nameof(value));
             }
 
-            return new Width() { Value = value.ToString() };
+            return new Width(value.ToString());
         }
 
         #endregion Methods

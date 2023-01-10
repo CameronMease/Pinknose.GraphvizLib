@@ -1,15 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Pinknose.GraphvizLib.Html.Attributes
+﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class PortName : HtmlAttribute, ICellAttribute, ITableAttribute
+    public sealed class PortName : HtmlAttribute, ICellAttribute, ITableAttribute
     {
+        #region Constructors
+
+        private PortName(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
         public override string Name => "PORT";
 
-        public static PortName Set(string name) => new PortName() { Value = name }; 
+        #endregion Properties
+
+        #region Methods
+
+        public static PortName Set(string name) => new PortName(name);
+
+        #endregion Methods
+
     }
 }

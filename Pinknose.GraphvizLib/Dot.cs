@@ -14,8 +14,10 @@ namespace Pinknose.GraphvizLib
 
         private static readonly Lazy<string> DotBinPath = new(() =>
             {
+                var assemblyLocation = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Dot))?.Location) ?? throw new ArgumentNullException();
+
                 string path = Path.Combine(
-                    Path.GetDirectoryName(Assembly.GetAssembly(typeof(Dot)).Location),
+                    assemblyLocation,
                     "Graphviz",
                     "bin");
 
@@ -35,6 +37,16 @@ namespace Pinknose.GraphvizLib
             var bitmap = SKBitmap.Decode(stream);
 
             return bitmap;
+        }
+
+        public static async Task<SvgDocument> RenderSvgAsync(Graph graph, GraphvizEngine engine)
+        {
+            using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            var svg = SvgDocument.Open<SvgDocument>(stream);
+
+            return svg;
         }
 
         public static async Task RenderToPngFileAsync(Graph graph, GraphvizEngine engine, string filename)
@@ -61,16 +73,6 @@ namespace Pinknose.GraphvizLib
             await stream.CopyToAsync(filestream);
 
             filestream.Close();
-        }
-
-        public static async Task<SvgDocument> RenderSvgAsync(Graph graph, GraphvizEngine engine)
-        {
-            using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
-            stream.Seek(0, SeekOrigin.Begin);
-
-            var svg = SvgDocument.Open<SvgDocument>(stream);
-
-            return svg;
         }
 
         private static async Task<Stream> RenderAsync(Graph graph, string type, GraphvizEngine engine)

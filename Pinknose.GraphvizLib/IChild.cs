@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        List<GraphvizElement> Children { get; }
+        HashSet<GraphvizElement> Children { get; }
 
         Graph Graph { get; }
 

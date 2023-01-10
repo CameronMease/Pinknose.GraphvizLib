@@ -32,12 +32,24 @@ namespace Pinknose.GraphvizLib
             return buffer;
         }
 
+        /// <summary>
+        /// Gets the display value for a given enumeration value.
+        /// </summary>
+        /// <param name="theEnum"></param>
+        /// <returns></returns>
         public static string GetDisplayValue(this Enum theEnum)
         {
             var enumType = theEnum.GetType();
             var memberInfos = enumType.GetMember(theEnum.ToString());
             var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
-            var valueAttribute = (DisplayValueAttribute)enumValueMemberInfo.GetCustomAttributes(typeof(DisplayValueAttribute), false).FirstOrDefault();
+
+            DisplayValueAttribute? valueAttribute = null;
+
+            if (enumValueMemberInfo is not null)
+            {
+                valueAttribute = (DisplayValueAttribute?)enumValueMemberInfo.GetCustomAttributes(typeof(DisplayValueAttribute), false).FirstOrDefault();
+            }
+
             return valueAttribute?.DisplayValue ?? theEnum.ToString();
         }
 

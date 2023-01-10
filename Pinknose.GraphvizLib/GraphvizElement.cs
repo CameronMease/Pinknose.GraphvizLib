@@ -16,7 +16,12 @@ namespace Pinknose.GraphvizLib
         [AttributeName("fontsize")]
         public double? FontSize { get; set; } = null;
 
-        public virtual string Id { get; } = "A" + Guid.NewGuid().ToString().Replace("-", "");
+        /// <summary>
+        /// Unique identifier for the element.  Can be set by the user, or an ID will be automatically generated.
+        /// </summary>
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
+        public virtual string Id => "A" + Guid.ToString().Replace("-", "");
 
         [AttributeName("label")]
         public Label? Label { get; set; } = null;
@@ -30,10 +35,10 @@ namespace Pinknose.GraphvizLib
 
         internal override string RenderDot(Graph graph, int indent)
         {
-            string indentText = new string(' ', indent);
-            string nextIndentText = new string(' ', indent + DefaultIndentAmount);
+            string indentText = new(' ', indent);
+            string nextIndentText = new(' ', indent + DefaultIndentAmount);
 
-            var headerAttribute = (HeaderTextAttribute)this.GetType().GetCustomAttributes(typeof(HeaderTextAttribute), true).FirstOrDefault();
+            var headerAttribute = (HeaderTextAttribute?)this.GetType().GetCustomAttributes(typeof(HeaderTextAttribute), true).FirstOrDefault();
             var isParent = headerAttribute != null;
 
             var sb = new StringBuilder();

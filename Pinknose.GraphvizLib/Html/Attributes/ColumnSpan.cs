@@ -1,7 +1,15 @@
 ﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class ColumnSpan : HtmlAttribute, ICellAttribute
+    public sealed class ColumnSpan : HtmlAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private ColumnSpan(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
         #region Properties
 
         public override string Name => "COLSPAN";
@@ -17,7 +25,7 @@
                 throw new ArgumentOutOfRangeException(nameof(span));
             }
 
-            return new ColumnSpan() { Value = span.ToString() };
+            return new ColumnSpan(span.ToString());
         }
 
         #endregion Methods

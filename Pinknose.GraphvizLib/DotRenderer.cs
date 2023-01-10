@@ -7,6 +7,32 @@ namespace Pinknose.GraphvizLib
     {
         #region Methods
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+
+            return GetHashCode() == obj.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 0;
+
+            foreach (var propInfo in this.GetType().GetProperties())
+            {
+                var prop = propInfo.GetValue(this);
+
+                if (prop != null && propInfo.Name != nameof(Guid))
+                {
+                    var tempHash = prop.GetHashCode();
+
+                    hash += tempHash;
+                }
+            }
+
+            return hash;
+        }
+
         internal abstract string RenderDot(Graph graph, int indent);
 
         internal string RenderMultiLineAttributes(int indent)
@@ -64,7 +90,7 @@ namespace Pinknose.GraphvizLib
                     {
                         if (underlyingType == typeof(Color))
                         {
-                            attrbuteValue = value.ToString().ToLower().SurroundInQuotes();
+                            attrbuteValue = (value.ToString() ?? throw new ArgumentNullException()).ToLower().SurroundInQuotes();
                         }
                         else
                         {
@@ -73,16 +99,16 @@ namespace Pinknose.GraphvizLib
                     }
                     else if (underlyingType == typeof(bool))
                     {
-                        attrbuteValue = value.ToString().ToLower().SurroundInQuotes();
+                        attrbuteValue = (value.ToString() ?? throw new ArgumentNullException()).ToLower().SurroundInQuotes();
                     }
                     else if (underlyingType == typeof(Label) || value.GetType() == typeof(Label))
                     {
                         var tempVal = (Label)value;
-                        attrbuteValue = tempVal.ToString().SurroundInQuotes(!tempVal.IsHtml);
+                        attrbuteValue = (tempVal.ToString() ?? throw new ArgumentNullException()).SurroundInQuotes(!tempVal.IsHtml);
                     }
                     else
                     {
-                        attrbuteValue = value.ToString().SurroundInQuotes();
+                        attrbuteValue = ((value.ToString() ?? throw new ArgumentNullException()).SurroundInQuotes() ?? throw new ArgumentNullException());
                     }
 
                     if (attrbuteValue is not null)

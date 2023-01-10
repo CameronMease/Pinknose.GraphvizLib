@@ -26,7 +26,7 @@ namespace Pinknose.GraphvizLib
         [AttributeName("center")]
         public bool? Center { get; set; } = null;
 
-        public List<GraphvizElement> Children { get; } = new List<GraphvizElement>();
+        public HashSet<GraphvizElement> Children { get; } = new();
 
         public ExtendedList<Edge> Edges { get; } = new();
 
@@ -65,15 +65,16 @@ namespace Pinknose.GraphvizLib
                )
             );
 
-            return (png, svg);
+            return (png ?? throw new ArgumentNullException(), svg ?? throw new ArgumentNullException());
         }
 
         public async Task<SKBitmap> RenderPngAsync(GraphvizEngine engine) => await Dot.RenderPngAsync(this, engine);
 
-        public async Task RenderToPngFileAsync(GraphvizEngine engine, string filename) => await Dot.RenderToPngFileAsync(this, engine, filename);
-        public async Task RenderToSvgFileAsync(GraphvizEngine engine, string filename) => await Dot.RenderToSvgFileAsync(this, engine, filename);
-
         public async Task<SvgDocument> RenderSvgAsync(GraphvizEngine engine) => await Dot.RenderSvgAsync(this, engine);
+
+        public async Task RenderToPngFileAsync(GraphvizEngine engine, string filename) => await Dot.RenderToPngFileAsync(this, engine, filename);
+
+        public async Task RenderToSvgFileAsync(GraphvizEngine engine, string filename) => await Dot.RenderToSvgFileAsync(this, engine, filename);
 
         private void Edges_AddingItem(object? sender, AddingItemEventArgs<Edge> e)
         {

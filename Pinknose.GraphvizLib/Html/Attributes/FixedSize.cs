@@ -1,7 +1,15 @@
 ﻿namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    public class FixedSize : HtmlAttribute, ITableAttribute, ICellAttribute
+    public sealed class FixedSize : HtmlAttribute, ITableAttribute, ICellAttribute
     {
+        #region Constructors
+
+        private FixedSize(string value) : base(value)
+        {
+        }
+
+        #endregion Constructors
+
         #region Properties
 
         public override string Name => "FIXEDSIZE";
@@ -12,7 +20,7 @@
 
         public static FixedSize Set(bool value)
         {
-            return new FixedSize() { Value = value.ToString().ToLower() };
+            return new FixedSize(value.ToString().ToLower());
         }
 
         #endregion Methods
