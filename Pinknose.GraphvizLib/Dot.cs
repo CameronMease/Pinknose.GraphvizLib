@@ -93,8 +93,8 @@ namespace Pinknose.GraphvizLib
                 StartInfo = new ProcessStartInfo()
                 {
                     UseShellExecute = false,
-                    WorkingDirectory = DotBinPath?.Value,
-                    FileName = Path.Combine(DotBinPath?.Value, dotExecutableName),
+                    WorkingDirectory = DotBinPath.Value,
+                    FileName = Path.Combine(DotBinPath.Value, dotExecutableName),
                     Arguments = $@"-T{type}",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,

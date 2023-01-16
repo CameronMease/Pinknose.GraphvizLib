@@ -71,7 +71,9 @@ namespace Pinknose.GraphvizLib.Html
 
         private TableCellBuilder<TParent> AppendIcon(string filename)
         {
-            IconsPath ??= Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "Html", "Icons");
+            var assemblyLocation = Path.GetDirectoryName(this.GetType().Assembly.Location) ?? throw new ArgumentNullException(nameof(Type.Assembly.Location));
+
+            IconsPath ??= Path.Combine(assemblyLocation, "Html", "Icons");
 
             var fullPath = Path.Combine(IconsPath, filename);
 
