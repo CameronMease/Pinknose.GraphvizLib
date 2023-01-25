@@ -1,7 +1,10 @@
 ﻿using SkiaSharp;
 using Svg;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Pinknose.GraphvizLib
 {

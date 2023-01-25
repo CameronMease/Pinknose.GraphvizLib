@@ -1,4 +1,6 @@
-﻿namespace Pinknose.GraphvizLib
+﻿using System.Collections.Generic;
+
+namespace Pinknose.GraphvizLib
 {
     public interface IParent
     {

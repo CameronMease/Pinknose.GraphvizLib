@@ -1,4 +1,6 @@
 ﻿using Pinknose.GraphvizLib.Attributes;
+using System;
+using System.Linq;
 using System.Text;
 
 namespace Pinknose.GraphvizLib

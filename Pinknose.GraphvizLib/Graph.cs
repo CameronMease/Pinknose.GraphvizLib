@@ -1,6 +1,9 @@
 ﻿using Pinknose.GraphvizLib.Attributes;
 using SkiaSharp;
 using Svg;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pinknose.GraphvizLib
 {

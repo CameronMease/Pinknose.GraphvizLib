@@ -1,4 +1,6 @@
-﻿namespace Pinknose.GraphvizLib.Attributes
+﻿using System;
+
+namespace Pinknose.GraphvizLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     internal class AttributeNameAttribute : Attribute

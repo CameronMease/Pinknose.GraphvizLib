@@ -1,4 +1,5 @@
 ﻿using Pinknose.GraphvizLib.Attributes;
+using System;
 using System.Text;
 
 namespace Pinknose.GraphvizLib
@@ -28,11 +29,16 @@ namespace Pinknose.GraphvizLib
 
         public GraphvizElement Destination { get; }
 
+        public string? EndPortName { get; set; } = null;
+
         [AttributeName("fontcolor")]
         public Color? FontColor { get; set; } = null;
 
         [AttributeName("fontsize")]
         public double? FontSize { get; set; } = null;
+
+        [AttributeName("headport")]
+        public PortPosition? HeadPort { get; set; } = null;
 
         [AttributeName("label")]
         public Label? Label { get; set; } = null;
@@ -42,17 +48,13 @@ namespace Pinknose.GraphvizLib
 
         public GraphvizElement Source { get; }
 
+        public string? StartPortName { get; set; } = null;
+
         [AttributeName("style")]
         public EdgeStyle? Style { get; set; } = null;
 
-        [AttributeName("headport")]
-        public PortPosition? HeadPort { get; set; } = null;
-
         [AttributeName("tailport")]
         public PortPosition? TailPort { get; set; } = null;
-
-        public string? StartPortName { get; set; } = null;
-        public string? EndPortName { get; set; } = null;
 
         #endregion Properties
 
@@ -73,8 +75,6 @@ namespace Pinknose.GraphvizLib
 
             return sb.ToString();
         }
-
-        
 
         #endregion Methods
     }
