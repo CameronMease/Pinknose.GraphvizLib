@@ -59,7 +59,11 @@ namespace Pinknose.GraphvizLib.Html
         internal static async Task RenderToDiskAsync(string latex, string filename)
         {
             var bytes = await RenderAsync(latex);
+#if NETFRAMEWORK
+            File.WriteAllBytes(filename, bytes);
+#else
             await File.WriteAllBytesAsync(filename, bytes);
+#endif
         }
 
         #endregion Methods
