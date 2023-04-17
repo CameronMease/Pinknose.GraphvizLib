@@ -62,7 +62,14 @@ namespace Pinknose.GraphvizLib.Html
                     }
                 }
 
-                sb.Append(text);
+                var tempText = text
+                    .Replace("&", "&amp;")
+                    .Replace("<", "&lt;")
+                    .Replace(">", "&gt;")
+                    .Replace("\"", "&quot;")
+                    .Replace("'", "&apos;");
+
+                sb.Append(tempText);
 
                 foreach (var option in Enum.GetValues(typeof(HtmlTextFormat)))
                 {
