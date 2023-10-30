@@ -28,6 +28,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Pinknose.GraphvizLib
@@ -40,18 +41,27 @@ namespace Pinknose.GraphvizLib
         #region Fields
 
         private static readonly Lazy<string> DotBinPath = new(() =>
+        {
+            string? path = null;
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var assemblyLocation = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Dot))?.Location) ?? throw new ArgumentNullException();
+                path = Path.Combine(Environment.ExpandEnvironmentVariables("%ProgramW6432%"), "Graphviz", "bin");
+            }
+            else
+            {
+                throw new NotImplementedException("dot.exe can only be called on a Windows host.");
+            }
 
-                string path = Path.Combine(
-                    assemblyLocation,
-                    "Graphviz",
-                    "bin");
+            if (!Directory.Exists(path))
+            {
+                throw new DirectoryNotFoundException($"Path to Graphviz bin directory ({path}) does not exist. Did you install Graphviz?");
+            }
 
-                return path;
-            });
+            return path;
+        });
 
-        #endregion Fields
+#endregion Fields
 
         #region Methods
 
