@@ -28,6 +28,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Pinknose.GraphvizLib
@@ -37,21 +38,53 @@ namespace Pinknose.GraphvizLib
 
     public static class Dot
     {
+        private static bool ExistsOnPath(string fileName)
+        {
+            return GetFullPath(fileName) != null;
+        }
+
+        private static string? GetFullPath(string fileName)
+        {
+            if (File.Exists(fileName))
+                return Path.GetFullPath(fileName);
+
+            var values = Environment.GetEnvironmentVariable("PATH");
+            foreach (var path in values.Split(Path.PathSeparator))
+            {
+                var fullPath = Path.Combine(path, fileName);
+                if (File.Exists(fullPath))
+                    return fullPath;
+            }
+            return null;
+        }
+
         #region Fields
 
-        private static readonly Lazy<string> DotBinPath = new(() =>
+        private static readonly Lazy<string> DotPath = new(() =>
+        {
+            string? path = null;
+
+            if (path == null)
             {
-                var assemblyLocation = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Dot))?.Location) ?? throw new ArgumentNullException();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    path = GetFullPath("dot.exe");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    path = GetFullPath("dot");
+                }                
+            }
 
-                string path = Path.Combine(
-                    assemblyLocation,
-                    "Graphviz",
-                    "bin");
+            if (path==null)
+            {
+                throw new DirectoryNotFoundException($"Path to Graphviz bin directory ({path}) does not exist. Did you install Graphviz and add it to the system path?");
+            }
 
-                return path;
-            });
+            return path;
+        });
 
-        #endregion Fields
+#endregion Fields
 
         #region Methods
 
@@ -104,12 +137,6 @@ namespace Pinknose.GraphvizLib
 
         private static async Task<Stream> RenderAsync(Graph graph, string type, GraphvizEngine engine)
         {
-            var dotExecutableName = engine switch
-            {
-                GraphvizEngine.Fdp => "fdp.exe",
-                GraphvizEngine.Dot => "dot.exe",
-                _ => throw new NotImplementedException()
-            };
 
             bool errorRunningProcess = false;
 
@@ -120,8 +147,8 @@ namespace Pinknose.GraphvizLib
                 StartInfo = new ProcessStartInfo()
                 {
                     UseShellExecute = false,
-                    WorkingDirectory = DotBinPath.Value,
-                    FileName = Path.Combine(DotBinPath.Value, dotExecutableName),
+                    WorkingDirectory = Path.GetDirectoryName(DotPath.Value),
+                    FileName = Path.GetFileName(DotPath.Value),
                     Arguments = $@"-T{type}",
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
