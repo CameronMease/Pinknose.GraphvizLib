@@ -24,7 +24,6 @@
 
 using Pinknose.GraphvizLib.Html.Attributes;
 using System;
-using System.IO;
 using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
@@ -32,8 +31,6 @@ namespace Pinknose.GraphvizLib.Html
     public class TableCellBuilder<TParent> : HtmlBuilderBase where TParent : HtmlBuilderBase
     {
         #region Fields
-
-        private static string? IconsPath = null;
 
         private readonly TParent _parent;
 
@@ -62,15 +59,15 @@ namespace Pinknose.GraphvizLib.Html
         public TableCellBuilder<TParent> AppendCell(params ICellAttribute[] attributes) =>
             new(_parent, attributes);
 
-        public TableCellBuilder<TParent> AppendImage(string filename)
+        public TableCellBuilder<TParent> AppendImage(Guid guid)
         {
-            StringBuilder.Append(SharedFormatting.FormatImage(filename));
+            StringBuilder.Append(SharedFormatting.FormatImage(guid));
             return this;
         }
 
-        public TableCellBuilder<TParent> AppendLatexImage(string latex)
+        public TableCellBuilder<TParent> AppendLatexImage(string latex, HtmlImageCache imageCache)
         {
-            StringBuilder.Append(SharedFormatting.FormatLatex(latex));
+            StringBuilder.Append(SharedFormatting.FormatLatex(latex, imageCache));
             return this;
         }
 
@@ -86,8 +83,6 @@ namespace Pinknose.GraphvizLib.Html
             return this;
         }
 
-        public TableCellBuilder<TParent> AppendWarningIcon() => AppendIcon("StatusWarning.png");
-
         public TParent EndCell()
         {
             StringBuilder.Append("</TD>");
@@ -95,15 +90,11 @@ namespace Pinknose.GraphvizLib.Html
             return _parent;
         }
 
-        private TableCellBuilder<TParent> AppendIcon(string filename)
+        public TableCellBuilder<TParent> AppendIcon(Icons icon, HtmlImageCache imageCache)
         {
-            var assemblyLocation = Path.GetDirectoryName(this.GetType().Assembly.Location) ?? throw new ArgumentNullException(nameof(Type.Assembly.Location));
+            var guid = imageCache.GetIconGuid(icon);
 
-            IconsPath ??= Path.Combine(assemblyLocation, "Html", "Icons");
-
-            var fullPath = Path.Combine(IconsPath, filename);
-
-            AppendImage(fullPath);
+            AppendImage(guid);
 
             return this;
         }

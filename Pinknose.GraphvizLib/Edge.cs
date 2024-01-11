@@ -23,16 +23,17 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
+using Pinknose.GraphvizLib.Html;
 using System;
 using System.Text;
 
 namespace Pinknose.GraphvizLib
 {
-    public class Edge : DotRenderer
+    public sealed class Edge : DotRenderer
     {
         #region Constructors
 
-        public Edge(GraphvizElement source, GraphvizElement destination)
+        public Edge(GraphvizElement source, GraphvizElement destination) : base(null)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
             Destination = destination ?? throw new ArgumentNullException(nameof(destination));
@@ -84,7 +85,7 @@ namespace Pinknose.GraphvizLib
 
         #region Methods
 
-        internal override string RenderDot(Graph graph, int indent)
+        internal override Dot RenderDot(Graph graph, int indent)
         {
             string connectorSyntax = graph.GetType() == typeof(Digraph) ? "->" : "--";
 
@@ -97,7 +98,7 @@ namespace Pinknose.GraphvizLib
 
             sb.AppendLine($"{indentText}{startSourceId}{connectorSyntax}{endSourceId} {this.RenderSingleLineAttributes()};");
 
-            return sb.ToString();
+            return new (sb.ToString(), this.HtmlImageCache);
         }
 
         #endregion Methods

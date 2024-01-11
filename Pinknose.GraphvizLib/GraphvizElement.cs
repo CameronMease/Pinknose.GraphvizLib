@@ -23,6 +23,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
+using Pinknose.GraphvizLib.Html;
 using Pinknose.Utilities;
 using System;
 using System.Linq;
@@ -32,6 +33,10 @@ namespace Pinknose.GraphvizLib
 {
     public abstract class GraphvizElement : DotRenderer
     {
+        public GraphvizElement(HtmlImageCache? imageCache = null) : base(imageCache)
+        {
+        }
+
         #region Fields
 
         private static readonly int DefaultIndentAmount = 3;
@@ -60,7 +65,7 @@ namespace Pinknose.GraphvizLib
 
         #region Methods
 
-        internal override string RenderDot(Graph graph, int indent)
+        internal override Dot RenderDot(Graph graph, int indent)
         {
             string indentText = new(' ', indent);
             string nextIndentText = new(' ', indent + DefaultIndentAmount);
@@ -82,7 +87,7 @@ namespace Pinknose.GraphvizLib
                 {
                     foreach (var child in ((IParent)this).Children)
                     {
-                        sb.AppendLine(child.RenderDot(graph, indent + DefaultIndentAmount));
+                        sb.AppendLine(child.RenderDot(graph, indent + DefaultIndentAmount).DotSource);
                     }
                 }
             }
@@ -102,7 +107,7 @@ namespace Pinknose.GraphvizLib
                 sb.AppendLine(indentText + "}");
             }
 
-            return sb.ToString();
+            return new(sb.ToString(), this.HtmlImageCache);
         }
 
         #endregion Methods

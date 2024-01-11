@@ -23,6 +23,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
+using Pinknose.GraphvizLib.Html;
 using System.Collections.Generic;
 
 namespace Pinknose.GraphvizLib
@@ -32,7 +33,7 @@ namespace Pinknose.GraphvizLib
     {
         #region Constructors
 
-        public Subgraph(Graph graph)
+        public Subgraph(Graph graph, HtmlImageCache imageCache) : base(imageCache)
         {
             Graph = graph;
         }

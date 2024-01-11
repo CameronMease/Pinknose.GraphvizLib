@@ -22,191 +22,21 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using SkiaSharp;
-using Svg;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using Pinknose.GraphvizLib.Html;
 
 namespace Pinknose.GraphvizLib
 {
-    public enum GraphvizEngine
-    { Dot, Fdp }
-
-    public static class Dot
+    public class Dot
     {
-        private static bool ExistsOnPath(string fileName)
+        public Dot(string dotSource, HtmlImageCache imageCache)
         {
-            return GetFullPath(fileName) != null;
+            DotSource = dotSource;
+            ImageCache = imageCache;
         }
 
-        private static string? GetFullPath(string fileName)
-        {
-            if (File.Exists(fileName))
-                return Path.GetFullPath(fileName);
+        public string DotSource { get; private set; }
+        public HtmlImageCache? ImageCache { get; private set; } = null;
 
-            var values = Environment.GetEnvironmentVariable("PATH");
-            foreach (var path in values.Split(Path.PathSeparator))
-            {
-                var fullPath = Path.Combine(path, fileName);
-                if (File.Exists(fullPath))
-                    return fullPath;
-            }
-            return null;
-        }
-
-        #region Fields
-
-        private static readonly Lazy<string> DotPath = new(() =>
-        {
-            string? path = null;
-
-            if (path == null)
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    path = GetFullPath("dot.exe");
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    path = GetFullPath("dot");
-                }                
-            }
-
-            if (path==null)
-            {
-                throw new DirectoryNotFoundException($"Path to Graphviz bin directory ({path}) does not exist. Did you install Graphviz and add it to the system path?");
-            }
-
-            return path;
-        });
-
-#endregion Fields
-
-        #region Methods
-
-        public static async Task<SKBitmap> RenderPngAsync(Graph graph, GraphvizEngine engine)
-        {
-            using var stream = await RenderAsync(graph, "png", engine).ConfigureAwait(false);
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            var bitmap = SKBitmap.Decode(stream);
-
-            return bitmap;
-        }
-
-        public static async Task<SvgDocument> RenderSvgAsync(Graph graph, GraphvizEngine engine)
-        {
-            using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
-            stream.Seek(0, SeekOrigin.Begin);
-
-            var svg = SvgDocument.Open<SvgDocument>(stream);
-
-            return svg;
-        }
-
-        public static async Task RenderToPngFileAsync(Graph graph, GraphvizEngine engine, string filename)
-        {
-            using var stream = await RenderAsync(graph, "png", engine).ConfigureAwait(false);
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            using var filestream = File.Create(filename);
-
-            await stream.CopyToAsync(filestream);
-
-            filestream.Close();
-        }
-
-        public static async Task RenderToSvgFileAsync(Graph graph, GraphvizEngine engine, string filename)
-        {
-            using var stream = await RenderAsync(graph, "svg", engine).ConfigureAwait(false);
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            using var filestream = File.Create(filename);
-
-            await stream.CopyToAsync(filestream);
-
-            filestream.Close();
-        }
-
-        private static async Task<Stream> RenderAsync(Graph graph, string type, GraphvizEngine engine)
-        {
-
-            bool errorRunningProcess = false;
-
-            string dot = graph.RenderDot();
-
-            var proc = new Process()
-            {
-                StartInfo = new ProcessStartInfo()
-                {
-                    UseShellExecute = false,
-                    WorkingDirectory = Path.GetDirectoryName(DotPath.Value),
-                    FileName = Path.GetFileName(DotPath.Value),
-                    Arguments = $@"-T{type}",
-                    RedirectStandardInput = true,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                }
-            };
-
-            proc.ErrorDataReceived += (sender, e) =>
-            {
-                errorRunningProcess = true;
-                Debug.Write(e.Data);
-            };
-
-            proc.OutputDataReceived += (sender, e) =>
-            {
-            };
-
-            try
-            {
-                proc.Start();
-
-                proc.StandardInput.WriteLine(dot);
-                proc.StandardInput.Flush();
-                proc.StandardInput.Close();
-
-                MemoryStream memoryStream = new();
-
-                byte[] buffer = new byte[8192];
-                int lastBytesRead = 0;
-                int totalBytesRead = 0;
-
-                do
-                {
-                    lastBytesRead = await proc.StandardOutput.BaseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
-                    totalBytesRead += lastBytesRead;
-                    memoryStream.Write(buffer, 0, lastBytesRead);
-                } while (lastBytesRead > 0);
-
-#if NET5_0_OR_GREATER
-                await proc.WaitForExitAsync();
-#else
-                proc.WaitForExit();
-#endif
-
-                if (errorRunningProcess)
-                {
-                    Debug.WriteLine("Error occurred while running DOT process.");
-                }
-
-                return memoryStream;
-            }
-            catch (Exception)
-            {
-            }
-
-            throw new NotImplementedException();
-        }
-
-        #endregion Methods
+        public override string ToString() => DotSource;
     }
 }

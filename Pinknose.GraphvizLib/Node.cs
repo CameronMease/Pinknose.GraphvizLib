@@ -23,11 +23,12 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
+using Pinknose.GraphvizLib.Html;
 using System.Text;
 
 namespace Pinknose.GraphvizLib
 {
-    public class Node : GraphvizElement
+    public sealed class Node : GraphvizElement
     {
         #region Properties
 
@@ -59,9 +60,13 @@ namespace Pinknose.GraphvizLib
 
         #region Methods
 
-        internal override string RenderDot(Graph graph, int indent)
+        public Node(HtmlImageCache? imageCache = null) : base(imageCache)
         {
-            string indentText = new string(' ', indent);
+        }
+
+        internal override Dot RenderDot(Graph graph, int indent)
+        {
+            string indentText = new(' ', indent);
 
             StringBuilder sb = new StringBuilder();
 
@@ -69,7 +74,7 @@ namespace Pinknose.GraphvizLib
 
             sb.AppendLine($"{this.RenderSingleLineAttributes()};");
 
-            return sb.ToString();
+            return new(sb.ToString(), this.HtmlImageCache);
         }
 
         #endregion Methods

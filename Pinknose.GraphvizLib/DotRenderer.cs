@@ -23,6 +23,7 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
+using Pinknose.GraphvizLib.Html;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,13 @@ namespace Pinknose.GraphvizLib
 {
     public abstract class DotRenderer
     {
+        protected HtmlImageCache? HtmlImageCache { get; private set; } = null;
+
+        public DotRenderer(HtmlImageCache? htmlImageCache)
+        {
+            HtmlImageCache = htmlImageCache;
+        }
+
         #region Methods
 
         public override bool Equals(object? obj)
@@ -60,7 +68,7 @@ namespace Pinknose.GraphvizLib
             return hash;
         }
 
-        internal abstract string RenderDot(Graph graph, int indent);
+        internal abstract Dot RenderDot(Graph graph, int indent);
 
         internal string RenderMultiLineAttributes(int indent)
         {
