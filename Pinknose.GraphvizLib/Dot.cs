@@ -28,15 +28,27 @@ namespace Pinknose.GraphvizLib
 {
     public class Dot
     {
+        #region Constructors
+
         public Dot(string dotSource, HtmlImageCache imageCache)
         {
             DotSource = dotSource;
             ImageCache = imageCache;
         }
 
+        #endregion Constructors
+
+        #region Properties
+
         public string DotSource { get; private set; }
         public HtmlImageCache? ImageCache { get; private set; } = null;
 
+        #endregion Properties
+
+        #region Methods
+
         public override string ToString() => DotSource;
+
+        #endregion Methods
     }
 }
