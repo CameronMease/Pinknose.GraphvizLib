@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netstandard2.1;net462;net472;net48;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;netstandard2.1;net462;net472;net48;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<LangVersion>latest</LangVersion>
@@ -10,12 +10,12 @@
   <ItemGroup>
     <PackageReference Include="CSharpMath" Version="0.5.1" />
     <PackageReference Include="CSharpMath.SkiaSharp" Version="0.5.1" />
-    <PackageReference Include="SkiaSharp" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.7" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.7" />
-    <PackageReference Include="Svg" Version="3.4.6" />
-    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+    <PackageReference Include="SkiaSharp" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="2.88.9" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="2.88.9" />
+    <PackageReference Include="Svg" Version="3.4.7" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
