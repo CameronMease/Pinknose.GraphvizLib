@@ -31,20 +31,8 @@ using System.IO;
 
 namespace Pinknose.GraphvizLib.Html
 {
-    public class ImageDescription
+    public class ImageDescription(string extension, byte[] bytes)
     {
-#if NET6_0_OR_GREATER
-        public ImageDescription()
-        {
-        }
-#endif
-
-        public ImageDescription(string extension, byte[] bytes)
-        {
-            Extension = extension;
-            Bytes = bytes;
-        }
-
         public string Extension
         {
             get;
@@ -53,7 +41,7 @@ namespace Pinknose.GraphvizLib.Html
 #else
             private set;
 #endif
-        }
+        } = extension;
 
         public byte[] Bytes
         {
@@ -63,7 +51,7 @@ namespace Pinknose.GraphvizLib.Html
 #else
             private set;
 #endif
-        }
+        } = bytes;
     }
 
     public enum Icons
@@ -78,9 +66,9 @@ namespace Pinknose.GraphvizLib.Html
             AddIconGuid(Icons.Warning, Resources.StatusWarningIcon);
         }
 
-        private readonly Dictionary<Guid, ImageDescription> ImageFiles = new();
+        private readonly Dictionary<Guid, ImageDescription> ImageFiles = [];
 
-        private readonly Dictionary<Icons, Guid> IconGuids = new();
+        private readonly Dictionary<Icons, Guid> IconGuids = [];
 
         public IEnumerable<Guid> Keys => ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles).Keys;
 

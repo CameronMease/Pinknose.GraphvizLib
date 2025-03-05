@@ -28,7 +28,7 @@ using System.Text;
 
 namespace Pinknose.GraphvizLib
 {
-    public sealed class Node : GraphvizElement
+    public sealed class Node(HtmlImageCache? imageCache = null) : GraphvizElement(imageCache)
     {
         #region Properties
 
@@ -57,18 +57,13 @@ namespace Pinknose.GraphvizLib
         public double? Width { get; set; } = null;
 
         #endregion Properties
-
         #region Methods
-
-        public Node(HtmlImageCache? imageCache = null) : base(imageCache)
-        {
-        }
 
         internal override Dot RenderDot(Graph graph, int indent)
         {
             string indentText = new(' ', indent);
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.Append($"{indentText}{this.Id} ");
 

@@ -48,7 +48,8 @@ namespace Pinknose.GraphvizLib
             if (File.Exists(fileName))
                 return Path.GetFullPath(fileName);
 
-            var values = Environment.GetEnvironmentVariable("PATH");
+            var values = Environment.GetEnvironmentVariable("PATH") ?? throw new InvalidOperationException("PATH environment variable is not set.");
+
             foreach (var path in values.Split(Path.PathSeparator))
             {
                 var fullPath = Path.Combine(path, fileName);
@@ -137,7 +138,7 @@ namespace Pinknose.GraphvizLib
 
         private static async Task<Stream> RenderAsync(Graph graph, string type, GraphvizEngine engine)
         {
-            Dictionary<string, string> imageFilePathByGuid = new();
+            Dictionary<string, string> imageFilePathByGuid = [];
 
             bool errorRunningProcess = false;
 

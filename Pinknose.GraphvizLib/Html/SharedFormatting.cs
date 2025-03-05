@@ -33,7 +33,7 @@ namespace Pinknose.GraphvizLib.Html
     {
         #region Methods
 
-        public static string FormatImage(Guid guid) => $"<IMG SRC=\"<GUID>{guid.ToString()}</GUID>\"/>";
+        public static string FormatImage(Guid guid) => $"<IMG SRC=\"<GUID>{guid}</GUID>\"/>";
 
         public static string FormatLatex(string latex, HtmlImageCache imageCache) => FormatLatexAsync(latex, imageCache).GetAwaiter().GetResult();
 
@@ -51,12 +51,17 @@ namespace Pinknose.GraphvizLib.Html
 
         public static string FormatText(string text, HtmlTextFormat format = HtmlTextFormat.None)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!string.IsNullOrEmpty(text))
             {
                 foreach (var option in Enum.GetValues(typeof(HtmlTextFormat)))
                 {
+                    if (option is null)
+                    {
+                        continue;
+                    }
+
                     if (((int)format & (int)option) != 0)
                     {
                         sb.AppendFormat("<{0}>", ((Enum)option).GetDisplayValue());
@@ -74,6 +79,11 @@ namespace Pinknose.GraphvizLib.Html
 
                 foreach (var option in Enum.GetValues(typeof(HtmlTextFormat)))
                 {
+                    if (option is null)
+                    {
+                        continue;
+                    }
+
                     if (((int)format & (int)option) != 0)
                     {
                         sb.AppendFormat("</{0}>", ((Enum)option).GetDisplayValue());
