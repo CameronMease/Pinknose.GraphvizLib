@@ -15,7 +15,7 @@
     <PackageReference Include="SkiaSharp.NativeAssets.macOS" Version="3.116.1" />
     <PackageReference Include="SkiaSharp.NativeAssets.Win32" Version="3.116.1" />
     <PackageReference Include="Svg" Version="3.4.7" />
-    <PackageReference Include="System.Resources.Extensions" Version="9.0.3" />
+    <PackageReference Include="System.Resources.Extensions" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>
