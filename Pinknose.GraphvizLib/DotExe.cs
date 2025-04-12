@@ -224,6 +224,7 @@ namespace Pinknose.GraphvizLib
                     Debug.WriteLine("Error occurred while running DOT process.");
                 }
 
+                //memoryStream.Seek(0, SeekOrigin.Begin);
                 return memoryStream;
             }
             catch (Exception)
