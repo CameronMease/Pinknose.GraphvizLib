@@ -24,7 +24,6 @@
 
 using Pinknose.GraphvizLib.Attributes;
 using Pinknose.GraphvizLib.Html;
-using Pinknose.Utilities;
 using System;
 using System.Linq;
 using System.Text;
@@ -112,4 +111,35 @@ namespace Pinknose.GraphvizLib
 
         #endregion Methods
     }
+
+#if !NET5_0_OR_GREATER
+
+    public static class TypeExtensions
+    {
+        /// <summary>
+        /// Checks if the object can be assigned to another type.  True means this object is one of the following:
+        /// Is the same type as the tested type; is a subclass of the tested type; implements the tested type (if the
+        /// tested type is an interface).
+        /// </summary>
+        /// <param name="thisObject"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        public static bool IsAssignableTo(this Type thisObject, Type targetType)
+        {
+            if (thisObject == null)
+            {
+                throw new ArgumentNullException(nameof(thisObject));
+            }
+            else if (targetType == null)
+            {
+                throw new ArgumentNullException(nameof(targetType));
+            }
+
+            return thisObject == targetType ||
+                targetType.IsAssignableFrom(thisObject) ||
+                targetType.IsInterface && thisObject.GetInterfaces().Any(i => i == targetType);
+        }
+    }
+
+#endif
 }
