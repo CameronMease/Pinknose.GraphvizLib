@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,44 +23,77 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Html;
+using System;
 
 namespace Pinknose.GraphvizLib
 {
-    public class Label
+    /// <summary>
+    /// A label: literal text, a Graphviz escString, or an HTML-like label.
+    /// </summary>
+    /// <remarks>
+    /// A plain string converts to <em>literal</em> text, so whatever it contains — quotes,
+    /// backslashes, line breaks — appears as written. Use <see cref="FromEscString"/> for text that
+    /// relies on Graphviz escapes such as <c>\l</c> (left-justified line) or <c>\N</c> (node name).
+    /// </remarks>
+    public sealed class Label
     {
         #region Fields
 
-        private string _text = string.Empty;
+        private readonly LabelKind _kind;
+        private readonly string _text;
 
         #endregion Fields
 
         #region Constructors
 
-        private Label()
+        private Label(string text, LabelKind kind)
         {
+            _text = text ?? throw new ArgumentNullException(nameof(text));
+            _kind = kind;
         }
 
         #endregion Constructors
 
+        #region Enums
+
+        private enum LabelKind
+        {
+            Literal,
+            EscString,
+            Html
+        }
+
+        #endregion Enums
+
         #region Properties
 
-        public bool IsHtml { get; private set; } = false;
+        public bool IsHtml => _kind == LabelKind.Html;
 
         #endregion Properties
 
         #region Methods
 
-        public static implicit operator Label(string label) => new Label() { _text = label };
+        public static Label FromEscString(string escString) => new(escString, LabelKind.EscString);
 
-        public static implicit operator Label(HtmlBuilder builder) => new Label()
-        {
-            _text = builder.ToString(),
-            IsHtml = true
-        };
+        public static Label FromHtml(HtmlBuilder builder) =>
+            new((builder ?? throw new ArgumentNullException(nameof(builder))).ToString(), LabelKind.Html);
 
-        public override int GetHashCode() => _text.GetHashCode();
+        public static Label FromText(string text) => new(text, LabelKind.Literal);
+
+        public static implicit operator Label(string text) => FromText(text);
+
+        public static implicit operator Label(HtmlBuilder builder) => FromHtml(builder);
 
         public override string ToString() => _text;
+
+        /// <summary>The label as a DOT attribute value.</summary>
+        internal string ToDot() => _kind switch
+        {
+            // Already wrapped in <...> by HtmlBuilder; it must not be quoted.
+            LabelKind.Html => _text,
+            LabelKind.EscString => DotString.QuoteEscString(_text),
+            _ => DotString.Quote(_text),
+        };
 
         #endregion Methods
     }

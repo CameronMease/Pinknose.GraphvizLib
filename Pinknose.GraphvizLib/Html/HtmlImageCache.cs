@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2024 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,45 +25,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace Pinknose.GraphvizLib.Html
 {
-    public class ImageDescription
+    public sealed class ImageDescription
     {
-#if NET6_0_OR_GREATER
-        public ImageDescription()
-        {
-        }
-#endif
+        #region Constructors
 
         public ImageDescription(string extension, byte[] bytes)
         {
-            Extension = extension;
-            Bytes = bytes;
+            Extension = extension ?? throw new ArgumentNullException(nameof(extension));
+            Bytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
         }
 
-        public string Extension
-        {
-            get;
-#if NET6_0_OR_GREATER
-            init;
-#else
-            private set;
-#endif
-        }
+        #endregion Constructors
 
-        public byte[] Bytes
-        {
-            get;
-#if NET6_0_OR_GREATER
-            init;
-#else
-            private set;
-#endif
-        }
+        #region Properties
+
+        public byte[] Bytes { get; }
+
+        /// <summary>File extension without the dot, such as <c>png</c>.</summary>
+        public string Extension { get; }
+
+        #endregion Properties
     }
 
     public enum Icons
@@ -71,76 +56,86 @@ namespace Pinknose.GraphvizLib.Html
         Warning
     }
 
-    public class HtmlImageCache : IReadOnlyDictionary<Guid, ImageDescription>
+    /// <summary>
+    /// Images used by HTML labels. Graphviz reads images from files, so a label refers to an image
+    /// by id, and a renderer writes the images out and substitutes the paths.
+    /// </summary>
+    public sealed class HtmlImageCache : IReadOnlyDictionary<Guid, ImageDescription>
     {
-        public HtmlImageCache()
-        {
-            AddIconGuid(Icons.Warning, Resources.StatusWarningIcon);
-        }
+        #region Fields
 
-        private readonly Dictionary<Guid, ImageDescription> ImageFiles = new();
+        private readonly Dictionary<Icons, Guid> _iconGuids = new();
+        private readonly Dictionary<Guid, ImageDescription> _imageFiles = new();
 
-        private readonly Dictionary<Icons, Guid> IconGuids = new();
+        #endregion Fields
 
-        public IEnumerable<Guid> Keys => ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles).Keys;
+        #region Properties
 
-        public IEnumerable<ImageDescription> Values => ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles).Values;
+        public int Count => _imageFiles.Count;
 
-        public int Count => ((IReadOnlyCollection<KeyValuePair<Guid, ImageDescription>>)ImageFiles).Count;
+        public IEnumerable<Guid> Keys => _imageFiles.Keys;
 
-        public ImageDescription this[Guid key] => ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles)[key];
+        public IEnumerable<ImageDescription> Values => _imageFiles.Values;
+
+        public ImageDescription this[Guid key] => _imageFiles[key];
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>The text an image's SRC holds until a renderer replaces it with a path.</summary>
+        public static string PlaceholderFor(Guid guid) => $"<GUID>{guid}</GUID>";
 
         public Guid Add(ImageDescription imageDescription)
         {
-            Guid guid = Guid.NewGuid();
-            ImageFiles.Add(guid, imageDescription);
+            if (imageDescription is null)
+            {
+                throw new ArgumentNullException(nameof(imageDescription));
+            }
+
+            var guid = Guid.NewGuid();
+            _imageFiles.Add(guid, imageDescription);
             return guid;
         }
 
-        public Guid GetIconGuid(Icons icon) => IconGuids[icon];
+        public bool ContainsKey(Guid key) => _imageFiles.ContainsKey(key);
 
-        private void AddIconGuid(Icons icon, Bitmap bitmap)
+        /// <summary>
+        /// The id of a built-in icon, adding it on first use. Added lazily so a cache that never
+        /// shows an icon carries none.
+        /// </summary>
+        public Guid GetIconGuid(Icons icon)
         {
-            var guid = Guid.NewGuid();
-            IconGuids.Add(icon, guid);
-
-            using MemoryStream stream = new();
-            bitmap.Save(stream, bitmap.RawFormat);
-            stream.Position = 0;
-            var iconBytes = stream.ToArray();
-
-            string format;
-
-            if (bitmap.RawFormat.Guid == ImageFormat.Png.Guid)
+            if (!_iconGuids.TryGetValue(icon, out var guid))
             {
-                format = "png";
-            }
-            else
-            {
-                throw new NotImplementedException();
+                guid = Add(new ImageDescription("png", LoadIcon(icon)));
+                _iconGuids.Add(icon, guid);
             }
 
-            ImageFiles.Add(guid, new(format, iconBytes));
+            return guid;
         }
 
-        public bool ContainsKey(Guid key)
+        public IEnumerator<KeyValuePair<Guid, ImageDescription>> GetEnumerator() => _imageFiles.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _imageFiles.GetEnumerator();
+
+        public bool TryGetValue(Guid key, out ImageDescription value) => _imageFiles.TryGetValue(key, out value!);
+
+        private static byte[] LoadIcon(Icons icon)
         {
-            return ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles).ContainsKey(key);
+            var resourceName = icon switch
+            {
+                Icons.Warning => "Pinknose.GraphvizLib.Html.Icons.StatusWarning.png",
+                _ => throw new ArgumentOutOfRangeException(nameof(icon)),
+            };
+
+            using var stream = typeof(HtmlImageCache).Assembly.GetManifestResourceStream(resourceName)
+                ?? throw new InvalidOperationException($"The embedded resource '{resourceName}' is missing.");
+            using var memory = new MemoryStream();
+            stream.CopyTo(memory);
+            return memory.ToArray();
         }
 
-        public bool TryGetValue(Guid key, out ImageDescription value)
-        {
-            return ((IReadOnlyDictionary<Guid, ImageDescription>)ImageFiles).TryGetValue(key, out value);
-        }
-
-        public IEnumerator<KeyValuePair<Guid, ImageDescription>> GetEnumerator()
-        {
-            return ((IEnumerable<KeyValuePair<Guid, ImageDescription>>)ImageFiles).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)ImageFiles).GetEnumerator();
-        }
+        #endregion Methods
     }
 }

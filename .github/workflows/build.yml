@@ -1,0 +1,37 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      # The rendering tests run the real Graphviz; without it they are only inconclusive.
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Build
+        run: dotnet build Pinknose.GraphvizLib.sln --configuration Release
+
+      - name: Test
+        run: dotnet test Pinknose.GraphvizLib.sln --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack Pinknose.GraphvizLib.sln --configuration Release --no-build --output artifacts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: artifacts/*.nupkg

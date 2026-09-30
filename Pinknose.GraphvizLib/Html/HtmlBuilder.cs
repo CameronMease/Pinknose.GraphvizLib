@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using Pinknose.GraphvizLib.Atttributes;
+using Pinknose.GraphvizLib.Attributes;
 using Pinknose.GraphvizLib.Html.Attributes;
 using System;
 using System.Text;
@@ -56,28 +56,32 @@ namespace Pinknose.GraphvizLib.Html
         Strikeout = 1 << 6
     }
 
+    /// <summary>
+    /// Builds an HTML-like label. Assign it to a <see cref="Label"/>; see
+    /// https://graphviz.org/doc/info/shapes.html#html for what Graphviz accepts.
+    /// </summary>
     public class HtmlBuilder : HtmlBuilderBase
     {
         #region Methods
 
         public HtmlBuilder AppendLineBreak()
         {
-            StringBuilder.Append(SharedFormatting.FormatLineBreak());
+            AppendRawString(SharedFormatting.FormatLineBreak());
             return this;
         }
 
         public HtmlBuilder AppendText(string text, HtmlTextFormat format = HtmlTextFormat.None)
         {
-            StringBuilder.Append(SharedFormatting.FormatText(text, format));
+            AppendRawString(SharedFormatting.FormatText(text, format));
             return this;
         }
 
-        public TableBuilder<HtmlBuilder> StartTable(params ITableAttribute[] attributes) => new TableBuilder<HtmlBuilder>(this, attributes);
+        public FontBuilder<HtmlBuilder> StartFont(params IFontAttribute[] attributes) => new(this, attributes);
 
-        public override string ToString()
-        {
-            return "<" + base.ToString() + ">";
-        }
+        public TableBuilder<HtmlBuilder> StartTable(params ITableAttribute[] attributes) => new(this, attributes);
+
+        /// <summary>The label, wrapped in the angle brackets that mark it as HTML to Graphviz.</summary>
+        public override string ToString() => "<" + base.ToString() + ">";
 
         #endregion Methods
     }
@@ -95,6 +99,19 @@ namespace Pinknose.GraphvizLib.Html
         public override string ToString() => StringBuilder.ToString();
 
         internal void AppendRawString(string text) => StringBuilder.Append(text);
+
+        /// <summary>Opens a tag with its attributes: <c>&lt;TD PORT="x"&gt;</c>.</summary>
+        internal static string OpenTag(string tag, IHtmlAttribute[] attributes)
+        {
+            var sb = new StringBuilder("<").Append(tag);
+
+            foreach (var attribute in attributes ?? Array.Empty<IHtmlAttribute>())
+            {
+                sb.Append(' ').Append(attribute);
+            }
+
+            return sb.Append('>').ToString();
+        }
 
         #endregion Methods
     }

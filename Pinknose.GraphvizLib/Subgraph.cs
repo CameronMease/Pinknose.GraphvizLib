@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,48 +24,60 @@
 
 using Pinknose.GraphvizLib.Attributes;
 using Pinknose.GraphvizLib.Html;
-using System.Collections.Generic;
+using System;
 
 namespace Pinknose.GraphvizLib
 {
-    [HeaderText("subgraph")]
+    /// <summary>
+    /// A group of nodes within a graph. A cluster (the default) is drawn as a box around its
+    /// nodes; a plain subgraph only groups them.
+    /// </summary>
     public sealed class Subgraph : GraphvizElement, IParent
     {
         #region Constructors
 
-        public Subgraph(Graph graph, HtmlImageCache imageCache) : base(imageCache)
+        public Subgraph(Graph graph, HtmlImageCache? imageCache = null) : base(imageCache)
         {
-            Graph = graph;
+            Graph = graph ?? throw new ArgumentNullException(nameof(graph));
         }
 
         #endregion Constructors
 
         #region Properties
 
-        public HashSet<GraphvizElement> Children { get; } = new();
+        public ElementCollection<GraphvizElement> Children { get; } = new();
 
         [AttributeName("color")]
-        public Color? Color { get; set; } = null;
+        public Color? Color { get; set; }
 
-        [AttributeName("fontcolor")]
-        public Color? FontColor { get; set; } = null;
-
-        //[AttributeName("fontsize")]
-        //public double? FontSize { get; set; } = null;
+        [AttributeName("fillcolor")]
+        public Color? FillColor { get; set; }
 
         public Graph Graph { get; }
-        public override string Id => (IsCluster ? "cluster_" : "") + base.Id;
+
+        /// <summary>
+        /// Whether this is a cluster. Graphviz recognises a cluster by its name, so the DOT name
+        /// gains a <c>cluster_</c> prefix.
+        /// </summary>
         public bool IsCluster { get; set; } = true;
 
         [AttributeName("labeljust")]
-        public HorizontalJustification? LabelJustification { get; set; } = null;
+        public HorizontalJustification? LabelJustification { get; set; }
 
         [AttributeName("penwidth")]
-        public double? LineWidth { get; set; } = null;
+        public double? LineWidth { get; set; }
 
         [AttributeName("style")]
-        public ClusterStyle? Style { get; set; } = null;
+        public ClusterStyle? Style { get; set; }
 
         #endregion Properties
+
+        #region Methods
+
+        internal override Dot RenderDot(Graph graph, int indent) =>
+            // The prefix lives in the rendered name only, so Name stays what the caller set.
+            RenderBlock(graph, indent, "subgraph", IsCluster ? DotString.Quote("cluster_" + Name) : QuotedName);
+
+        #endregion Methods
     }
 }

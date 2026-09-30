@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,121 +25,119 @@
 using Pinknose.GraphvizLib.Attributes;
 using Pinknose.GraphvizLib.Html;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace Pinknose.GraphvizLib
 {
+    /// <summary>A node, graph or subgraph.</summary>
     public abstract class GraphvizElement : DotRenderer
     {
-        public GraphvizElement(HtmlImageCache? imageCache = null) : base(imageCache)
-        {
-        }
-
         #region Fields
 
-        private static readonly int DefaultIndentAmount = 3;
+        internal const int DefaultIndentAmount = 3;
+
+        private string _name;
 
         #endregion Fields
 
+        #region Constructors
+
+        protected GraphvizElement(HtmlImageCache? imageCache = null) : base(imageCache)
+        {
+            _name = "A" + Guid.NewGuid().ToString("N");
+        }
+
+        #endregion Constructors
+
         #region Properties
 
-        [AttributeName("fontsize")]
-        public double? FontSize { get; set; } = null;
-
         /// <summary>
-        /// Unique identifier for the element.  Can be set by the user, or an ID will be automatically generated.
+        /// SVG class of the element (Graphviz <c>class</c>), for styling or finding it in SVG output.
         /// </summary>
-        public Guid Guid { get; set; } = Guid.NewGuid();
+        [AttributeName("class")]
+        public string? Class { get; set; }
 
-        public virtual string Id => "A" + Guid.ToString().Replace("-", "");
+        [AttributeName("fontcolor")]
+        public Color? FontColor { get; set; }
+
+        [AttributeName("fontname")]
+        public string? FontName { get; set; }
+
+        [AttributeName("fontsize")]
+        public double? FontSize { get; set; }
 
         [AttributeName("label")]
-        public Label? Label { get; set; } = null;
+        public Label? Label { get; set; }
+
+        /// <summary>
+        /// The element's DOT identifier. Generated uniquely by default; set it to make the output
+        /// predictable or readable. Any text is allowed — it is quoted when rendered.
+        /// </summary>
+        public virtual string Name
+        {
+            get => _name;
+            set => _name = string.IsNullOrEmpty(value) ? throw new ArgumentException("A name cannot be empty.", nameof(value)) : value;
+        }
+
+        /// <summary>
+        /// Id of the element's group in SVG output (Graphviz <c>id</c>). Not the same as
+        /// <see cref="Name"/>, which identifies the element within the DOT source.
+        /// </summary>
+        [AttributeName("id")]
+        public string? SvgId { get; set; }
+
+        /// <summary>Browser window or frame a link opens in (Graphviz <c>target</c>).</summary>
+        [AttributeName("target")]
+        public string? Target { get; set; }
 
         [AttributeName("texlbl")]
-        public Label? TexLabel { get; set; } = null;
+        public Label? TexLabel { get; set; }
+
+        /// <summary>Hover text in SVG output.</summary>
+        [AttributeName("tooltip")]
+        public string? Tooltip { get; set; }
+
+        /// <summary>Link target in SVG output (Graphviz <c>URL</c>).</summary>
+        [AttributeName("URL")]
+        public string? Url { get; set; }
+
+        /// <summary>The name as it appears in DOT source.</summary>
+        internal string QuotedName => DotString.Quote(Name);
 
         #endregion Properties
 
         #region Methods
 
-        internal override Dot RenderDot(Graph graph, int indent)
+        /// <summary>Renders a graph or subgraph: header, attributes, children, edges.</summary>
+        internal Dot RenderBlock(
+            Graph graph,
+            int indent,
+            string header,
+            string renderedName,
+            Action<StringBuilder, int>? beforeChildren = null,
+            Action<StringBuilder, int>? afterChildren = null)
         {
-            string indentText = new(' ', indent);
-            string nextIndentText = new(' ', indent + DefaultIndentAmount);
-
-            var headerAttribute = (HeaderTextAttribute?)this.GetType().GetCustomAttributes(typeof(HeaderTextAttribute), true).FirstOrDefault();
-            var isParent = headerAttribute != null;
+            var indentText = new string(' ', indent);
+            var innerIndent = indent + DefaultIndentAmount;
 
             var sb = new StringBuilder();
+            sb.Append(indentText).Append(header).Append(' ').Append(renderedName).AppendLine(" {");
+            sb.Append(RenderMultiLineAttributes(innerIndent));
 
-            if (isParent)
+            beforeChildren?.Invoke(sb, innerIndent);
+
+            foreach (var child in ((IParent)this).Children)
             {
-                sb.AppendLine($"{indentText}{headerAttribute?.Text} {this.Id} " + "{");
-
-                sb.AppendLine(this.RenderMultiLineAttributes(indent + DefaultIndentAmount));
-
-                var parentInterface = this.GetType().GetInterface(nameof(IParent));
-
-                if (parentInterface != null)
-                {
-                    foreach (var child in ((IParent)this).Children)
-                    {
-                        sb.AppendLine(child.RenderDot(graph, indent + DefaultIndentAmount).DotSource);
-                    }
-                }
+                sb.Append(child.RenderDot(graph, innerIndent).DotSource);
             }
 
-            bool isAssignableToGraph = this.GetType().IsAssignableTo(typeof(Graph));
+            afterChildren?.Invoke(sb, innerIndent);
 
-            if (isAssignableToGraph)
-            {
-                foreach (var edge in ((Graph)this).Edges)
-                {
-                    sb.Append(edge.RenderDot(graph, indent + DefaultIndentAmount));
-                }
-            }
+            sb.Append(indentText).AppendLine("}");
 
-            if (isParent)
-            {
-                sb.AppendLine(indentText + "}");
-            }
-
-            return new(sb.ToString(), this.HtmlImageCache);
+            return new Dot(sb.ToString(), HtmlImageCache);
         }
 
         #endregion Methods
     }
-
-#if !NET5_0_OR_GREATER
-
-    public static class TypeExtensions
-    {
-        /// <summary>
-        /// Checks if the object can be assigned to another type.  True means this object is one of the following:
-        /// Is the same type as the tested type; is a subclass of the tested type; implements the tested type (if the
-        /// tested type is an interface).
-        /// </summary>
-        /// <param name="thisObject"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        public static bool IsAssignableTo(this Type thisObject, Type targetType)
-        {
-            if (thisObject == null)
-            {
-                throw new ArgumentNullException(nameof(thisObject));
-            }
-            else if (targetType == null)
-            {
-                throw new ArgumentNullException(nameof(targetType));
-            }
-
-            return thisObject == targetType ||
-                targetType.IsAssignableFrom(thisObject) ||
-                targetType.IsInterface && thisObject.GetInterfaces().Any(i => i == targetType);
-        }
-    }
-
-#endif
 }

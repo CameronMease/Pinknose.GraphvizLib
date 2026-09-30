@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,27 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using Pinknose.GraphvizLib.Attributes;
 using Pinknose.GraphvizLib.Html;
 
 namespace Pinknose.GraphvizLib
 {
-    [HeaderText("digraph")]
+    /// <summary>A directed graph: edges are drawn with arrows.</summary>
     public sealed class Digraph : Graph
     {
-        public Digraph(HtmlImageCache imageCache) : base(imageCache)
+        #region Constructors
+
+        public Digraph(HtmlImageCache? imageCache = null) : base(imageCache)
         {
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        internal override string EdgeOperator => "->";
+
+        internal override string Keyword => "digraph";
+
+        #endregion Properties
     }
 }

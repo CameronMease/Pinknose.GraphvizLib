@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,62 +23,61 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using System;
-using System.IO;
+using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Pinknose.GraphvizLib.Html
 {
     internal static class SharedFormatting
     {
+        #region Fields
+
+        private static readonly HtmlTextFormat[] Formats =
+            Enum.GetValues(typeof(HtmlTextFormat))
+                .Cast<HtmlTextFormat>()
+                .Where(f => f != HtmlTextFormat.None)
+                .ToArray();
+
+        #endregion Fields
+
         #region Methods
 
-        public static string FormatImage(Guid guid) => $"<IMG SRC=\"<GUID>{guid.ToString()}</GUID>\"/>";
+        /// <summary>Escapes text for an HTML-like label, as element content or an attribute value.</summary>
+        public static string EscapeHtml(string text) => text
+            .Replace("&", "&amp;")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;")
+            .Replace("\"", "&quot;")
+            .Replace("'", "&apos;");
 
-        public static string FormatLatex(string latex, HtmlImageCache imageCache) => FormatLatexAsync(latex, imageCache).GetAwaiter().GetResult();
-
-        public static async Task<string> FormatLatexAsync(string latex, HtmlImageCache imageCache)
-        {
-            //var filename = Path.ChangeExtension(Path.GetTempFileName(), "png");
-
-            byte[] bytes = await LatexMathRenderer.RenderAsync(latex);
-            Guid guid = imageCache.Add(new ImageDescription("png", bytes));
-
-            return FormatImage(guid);
-        }
+        /// <summary>
+        /// An image by its cache id. The placeholder is replaced with a file path when a renderer
+        /// writes the image to disk; see <see cref="HtmlImageCache.PlaceholderFor"/>.
+        /// </summary>
+        public static string FormatImage(Guid guid) => $"<IMG SRC=\"{HtmlImageCache.PlaceholderFor(guid)}\"/>";
 
         public static string FormatLineBreak() => "<BR/>";
 
         public static string FormatText(string text, HtmlTextFormat format = HtmlTextFormat.None)
         {
-            StringBuilder sb = new StringBuilder();
-
-            if (!string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
-                foreach (var option in Enum.GetValues(typeof(HtmlTextFormat)))
-                {
-                    if (((int)format & (int)option) != 0)
-                    {
-                        sb.AppendFormat("<{0}>", ((Enum)option).GetDisplayValue());
-                    }
-                }
+                return string.Empty;
+            }
 
-                var tempText = text
-                    .Replace("&", "&amp;")
-                    .Replace("<", "&lt;")
-                    .Replace(">", "&gt;")
-                    .Replace("\"", "&quot;")
-                    .Replace("'", "&apos;");
+            var sb = new StringBuilder();
 
-                sb.Append(tempText);
+            foreach (var option in Formats.Where(f => format.HasFlag(f)))
+            {
+                sb.Append('<').Append(option.GetDisplayValue()).Append('>');
+            }
 
-                foreach (var option in Enum.GetValues(typeof(HtmlTextFormat)))
-                {
-                    if (((int)format & (int)option) != 0)
-                    {
-                        sb.AppendFormat("</{0}>", ((Enum)option).GetDisplayValue());
-                    }
-                }
+            sb.Append(EscapeHtml(text));
+
+            // Closed in reverse, so the tags nest: <B><I>x</I></B>, not <B><I>x</B></I>.
+            foreach (var option in Formats.Where(f => format.HasFlag(f)).Reverse())
+            {
+                sb.Append("</").Append(option.GetDisplayValue()).Append('>');
             }
 
             return sb.ToString();

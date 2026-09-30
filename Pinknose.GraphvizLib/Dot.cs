@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,12 @@ using Pinknose.GraphvizLib.Html;
 
 namespace Pinknose.GraphvizLib
 {
-    public class Dot
+    /// <summary>Rendered DOT source, with the images its HTML labels refer to.</summary>
+    public sealed class Dot
     {
         #region Constructors
 
-        public Dot(string dotSource, HtmlImageCache imageCache)
+        public Dot(string dotSource, HtmlImageCache? imageCache)
         {
             DotSource = dotSource;
             ImageCache = imageCache;
@@ -40,8 +41,13 @@ namespace Pinknose.GraphvizLib
 
         #region Properties
 
-        public string DotSource { get; private set; }
-        public HtmlImageCache? ImageCache { get; private set; } = null;
+        public string DotSource { get; }
+
+        /// <summary>
+        /// Images referenced by HTML labels. Their <c>SRC</c> is a placeholder until a renderer
+        /// writes the images to disk and substitutes the paths.
+        /// </summary>
+        public HtmlImageCache? ImageCache { get; }
 
         #endregion Properties
 

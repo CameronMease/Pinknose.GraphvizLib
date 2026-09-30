@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
-using Pinknose.GraphvizLib.Atttributes;
+using Pinknose.GraphvizLib.Attributes;
 
 namespace Pinknose.GraphvizLib
 {
