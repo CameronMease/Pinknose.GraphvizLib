@@ -22,7 +22,7 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using Pinknose.GraphvizLib.Atttributes;
+using Pinknose.GraphvizLib.Attributes;
 
 namespace Pinknose.GraphvizLib
 {

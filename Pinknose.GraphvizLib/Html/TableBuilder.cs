@@ -1,5 +1,28 @@
-﻿using Pinknose.GraphvizLib.Html.Attributes;
-using System.Text;
+/////////////////////////////////////////////////////////////////////////////////
+// MIT License
+//
+// Copyright(c) 2022-2026 Cameron Mease
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+/////////////////////////////////////////////////////////////////////////////////
+
+using Pinknose.GraphvizLib.Html.Attributes;
 
 namespace Pinknose.GraphvizLib.Html
 {
@@ -13,23 +36,22 @@ namespace Pinknose.GraphvizLib.Html
 
         #region Constructors
 
-        internal TableBuilder(TParent parent, params ITableAttribute[] attributes) : base()
+        internal TableBuilder(TParent parent, params ITableAttribute[] attributes)
         {
             _parent = parent;
-
-            StringBuilder.Append($"<TABLE");
-
-            foreach ( var attribute in attributes )
-            {
-                StringBuilder.Append($" {attribute.ToString()}");
-            }
-
-            StringBuilder.Append(">");
+            StringBuilder.Append(OpenTag("TABLE", attributes));
         }
 
         #endregion Constructors
 
         #region Methods
+
+        /// <summary>A horizontal rule between two rows (<c>&lt;HR/&gt;</c>).</summary>
+        public TableBuilder<TParent> AppendHorizontalRule()
+        {
+            StringBuilder.Append("<HR/>");
+            return this;
+        }
 
         public TParent EndTable()
         {
@@ -38,7 +60,7 @@ namespace Pinknose.GraphvizLib.Html
             return _parent;
         }
 
-        public TableRowBuilder<TableBuilder<TParent>> StartRow() => new TableRowBuilder<TableBuilder<TParent>>(this);
+        public TableRowBuilder<TableBuilder<TParent>> StartRow() => new(this);
 
         #endregion Methods
     }

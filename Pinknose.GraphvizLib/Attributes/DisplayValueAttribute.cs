@@ -24,7 +24,7 @@
 
 using System;
 
-namespace Pinknose.GraphvizLib.Atttributes
+namespace Pinknose.GraphvizLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Field)]
     internal class DisplayValueAttribute : Attribute

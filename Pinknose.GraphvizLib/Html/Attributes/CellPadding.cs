@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +22,37 @@
 // SOFTWARE.
 /////////////////////////////////////////////////////////////////////////////////
 
-using CSharpMath.SkiaSharp;
-using SkiaSharp;
 using System;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace Pinknose.GraphvizLib.Html
+namespace Pinknose.GraphvizLib.Html.Attributes
 {
-    internal static class LatexMathRenderer
+    /// <summary>Space between a cell's border and its content, in points.</summary>
+    public sealed class CellPadding : HtmlAttribute, ITableAttribute, ICellAttribute
     {
-        #region Methods
+        #region Constructors
 
-        internal static async Task<byte[]> RenderAsync(string latex)
+        private CellPadding(string value) : base(value)
         {
-            var painter = new MathPainter() { LaTeX = latex };
-
-            using var image = painter.DrawAsStream(format: SKEncodedImageFormat.Png) ?? throw new ArgumentNullException();
-
-            byte[] bytes = new byte[image.Length];
-
-            image.Seek(0, SeekOrigin.Begin);
-
-            var byteCount = 0;
-            var bytesRead = 0;
-
-            do
-            {
-                bytesRead = await image.ReadAsync(bytes, byteCount, bytes.Length - byteCount);
-                byteCount += bytesRead;
-            } while (bytesRead > 0);
-
-            return bytes;
         }
 
-        internal static async Task RenderToDiskAsync(string latex, string filename)
+        #endregion Constructors
+
+        #region Properties
+
+        public override string Name => "CELLPADDING";
+
+        #endregion Properties
+
+        #region Methods
+
+        public static CellPadding Set(int value)
         {
-            var bytes = await RenderAsync(latex);
-#if NETFRAMEWORK
-            File.WriteAllBytes(filename, bytes);
-#else
-            await File.WriteAllBytesAsync(filename, bytes);
-#endif
+            if (value < 0 || value > 255)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+
+            return new(value.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         #endregion Methods

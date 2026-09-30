@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 
 using Pinknose.GraphvizLib.Html.Attributes;
 using System;
-using System.Text;
 
 namespace Pinknose.GraphvizLib.Html
 {
@@ -38,36 +37,30 @@ namespace Pinknose.GraphvizLib.Html
 
         #region Constructors
 
-        internal TableCellBuilder(TParent parent, params ICellAttribute[] attributes) : base()
+        internal TableCellBuilder(TParent parent, params ICellAttribute[] attributes)
         {
             _parent = parent;
-
-            StringBuilder.Append($"<TD ");
-
-            foreach (var attribute in attributes)
-            {
-                StringBuilder.Append($" {attribute.ToString()}");
-            }
-
-            StringBuilder.Append('>');
+            StringBuilder.Append(OpenTag("TD", attributes));
         }
 
         #endregion Constructors
 
         #region Methods
 
-        public TableCellBuilder<TParent> AppendCell(params ICellAttribute[] attributes) =>
-            new(_parent, attributes);
+        public TableCellBuilder<TParent> AppendIcon(Icons icon, HtmlImageCache imageCache)
+        {
+            if (imageCache is null)
+            {
+                throw new ArgumentNullException(nameof(imageCache));
+            }
 
+            return AppendImage(imageCache.GetIconGuid(icon));
+        }
+
+        /// <summary>An image from an <see cref="HtmlImageCache"/>, by the id it was added under.</summary>
         public TableCellBuilder<TParent> AppendImage(Guid guid)
         {
             StringBuilder.Append(SharedFormatting.FormatImage(guid));
-            return this;
-        }
-
-        public TableCellBuilder<TParent> AppendLatexImage(string latex, HtmlImageCache imageCache)
-        {
-            StringBuilder.Append(SharedFormatting.FormatLatex(latex, imageCache));
             return this;
         }
 
@@ -90,14 +83,10 @@ namespace Pinknose.GraphvizLib.Html
             return _parent;
         }
 
-        public TableCellBuilder<TParent> AppendIcon(Icons icon, HtmlImageCache imageCache)
-        {
-            var guid = imageCache.GetIconGuid(icon);
+        public FontBuilder<TableCellBuilder<TParent>> StartFont(params IFontAttribute[] attributes) => new(this, attributes);
 
-            AppendImage(guid);
-
-            return this;
-        }
+        /// <summary>A table nested inside this cell.</summary>
+        public TableBuilder<TableCellBuilder<TParent>> StartTable(params ITableAttribute[] attributes) => new(this, attributes);
 
         #endregion Methods
     }

@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 
 using Pinknose.GraphvizLib.Attributes;
-using Pinknose.GraphvizLib.Html;
 using System;
 using System.Text;
 
@@ -44,42 +43,81 @@ namespace Pinknose.GraphvizLib
         #region Properties
 
         [AttributeName("arrowhead")]
-        public ArrowType? ArrowHead { get; set; } = null;
+        public ArrowType? ArrowHead { get; set; }
 
         [AttributeName("arrowtail")]
-        public ArrowType? ArrowTail { get; set; } = null;
+        public ArrowType? ArrowTail { get; set; }
+
+        /// <summary>SVG class of the edge (Graphviz <c>class</c>).</summary>
+        [AttributeName("class")]
+        public string? Class { get; set; }
 
         [AttributeName("color")]
-        public Color? Color { get; set; } = null;
+        public Color? Color { get; set; }
+
+        [AttributeName("constraint")]
+        public bool? Constraint { get; set; }
 
         public GraphvizElement Destination { get; }
 
-        public string? EndPortName { get; set; } = null;
+        /// <summary>
+        /// Which ends get arrowheads. In an undirected graph Graphviz draws none unless this is set.
+        /// </summary>
+        [AttributeName("dir")]
+        public EdgeDirection? Direction { get; set; }
+
+        /// <summary>
+        /// The port on <see cref="Destination"/> the edge ends at: a <c>PORT</c> in its HTML label.
+        /// </summary>
+        public string? EndPortName { get; set; }
 
         [AttributeName("fontcolor")]
-        public Color? FontColor { get; set; } = null;
+        public Color? FontColor { get; set; }
+
+        [AttributeName("fontname")]
+        public string? FontName { get; set; }
 
         [AttributeName("fontsize")]
-        public double? FontSize { get; set; } = null;
+        public double? FontSize { get; set; }
 
+        /// <summary>The compass point on the destination the edge ends at.</summary>
         [AttributeName("headport")]
-        public PortPosition? HeadPort { get; set; } = null;
+        public PortPosition? HeadPort { get; set; }
 
         [AttributeName("label")]
-        public Label? Label { get; set; } = null;
+        public Label? Label { get; set; }
 
         [AttributeName("penwidth")]
-        public double? LineWidth { get; set; } = null;
+        public double? LineWidth { get; set; }
 
         public GraphvizElement Source { get; }
 
-        public string? StartPortName { get; set; } = null;
+        /// <summary>
+        /// The port on <see cref="Source"/> the edge starts from: a <c>PORT</c> in its HTML label.
+        /// </summary>
+        public string? StartPortName { get; set; }
 
         [AttributeName("style")]
-        public EdgeStyle? Style { get; set; } = null;
+        public EdgeStyle? Style { get; set; }
 
+        /// <summary>Id of the edge's group in SVG output (Graphviz <c>id</c>).</summary>
+        [AttributeName("id")]
+        public string? SvgId { get; set; }
+
+        /// <summary>The compass point on the source the edge starts from.</summary>
         [AttributeName("tailport")]
-        public PortPosition? TailPort { get; set; } = null;
+        public PortPosition? TailPort { get; set; }
+
+        [AttributeName("target")]
+        public string? Target { get; set; }
+
+        /// <summary>Hover text in SVG output.</summary>
+        [AttributeName("tooltip")]
+        public string? Tooltip { get; set; }
+
+        /// <summary>Link target in SVG output (Graphviz <c>URL</c>).</summary>
+        [AttributeName("URL")]
+        public string? Url { get; set; }
 
         #endregion Properties
 
@@ -87,19 +125,19 @@ namespace Pinknose.GraphvizLib
 
         internal override Dot RenderDot(Graph graph, int indent)
         {
-            string connectorSyntax = graph.GetType() == typeof(Digraph) ? "->" : "--";
-
-            string indentText = new string(' ', indent);
-
-            var startSourceId = StartPortName is null ? Source.Id : $"{Source.Id}:{StartPortName}";
-            var endSourceId = EndPortName is null ? Destination.Id : $"{Destination.Id}:{EndPortName}";
-
             var sb = new StringBuilder();
+            sb.Append(' ', indent)
+                .Append(Endpoint(Source, StartPortName))
+                .Append(' ').Append(graph.EdgeOperator).Append(' ')
+                .Append(Endpoint(Destination, EndPortName))
+                .Append(RenderSingleLineAttributes())
+                .AppendLine(";");
 
-            sb.AppendLine($"{indentText}{startSourceId}{connectorSyntax}{endSourceId} {this.RenderSingleLineAttributes()};");
-
-            return new (sb.ToString(), this.HtmlImageCache);
+            return new Dot(sb.ToString(), HtmlImageCache);
         }
+
+        private static string Endpoint(GraphvizElement element, string? port) =>
+            port is null ? element.QuotedName : $"{element.QuotedName}:{DotString.Quote(port)}";
 
         #endregion Methods
     }

@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022-2023 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,134 +27,114 @@ using Pinknose.GraphvizLib.Html;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Pinknose.GraphvizLib
 {
+    /// <summary>Anything that renders to DOT with a list of attributes.</summary>
+    /// <remarks>
+    /// Equality is reference equality, deliberately. An earlier version compared elements by the
+    /// sum of their property hashes, so two distinct nodes with the same attributes were "equal"
+    /// and the second silently vanished from a graph's children.
+    /// </remarks>
     public abstract class DotRenderer
     {
-        protected HtmlImageCache? HtmlImageCache { get; private set; } = null;
+        #region Constructors
 
-        public DotRenderer(HtmlImageCache? htmlImageCache)
+        protected DotRenderer(HtmlImageCache? htmlImageCache)
         {
             HtmlImageCache = htmlImageCache;
         }
 
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Attributes this library has no property for, by their Graphviz name. Values are literal
+        /// text and are quoted and escaped when rendered. An entry here replaces a property that
+        /// renders the same attribute.
+        /// </summary>
+        public IDictionary<string, string> Attributes { get; } = new SortedDictionary<string, string>(StringComparer.Ordinal);
+
+        protected HtmlImageCache? HtmlImageCache { get; }
+
+        #endregion Properties
+
         #region Methods
-
-        public override bool Equals(object? obj)
-        {
-            if (obj == null) return false;
-
-            return GetHashCode() == obj.GetHashCode();
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 0;
-
-            foreach (var propInfo in this.GetType().GetProperties())
-            {
-                var prop = propInfo.GetValue(this);
-
-                if (prop != null && propInfo.Name != nameof(Guid))
-                {
-                    var tempHash = prop.GetHashCode();
-
-                    hash += tempHash;
-                }
-            }
-
-            return hash;
-        }
 
         internal abstract Dot RenderDot(Graph graph, int indent);
 
         internal string RenderMultiLineAttributes(int indent)
         {
-            string indentText = new string(' ', indent);
-
+            var indentText = new string(' ', indent);
             var sb = new StringBuilder();
 
-            var attributes = GetAttributes();
-
-            foreach (var attr in attributes)
+            foreach (var attr in GetAttributes())
             {
-                sb.AppendLine($"{indentText}{attr.Key}={attr.Value};");
+                sb.Append(indentText).Append(attr.Key).Append('=').Append(attr.Value).AppendLine(";");
             }
 
             return sb.ToString();
         }
 
+        /// <summary>The attributes as <c> [a="1", b="2"]</c>, or an empty string if there are none.</summary>
         internal string RenderSingleLineAttributes()
         {
-            var sb = new StringBuilder();
-            sb.Append("[");
-
             var attributes = GetAttributes();
 
-            foreach (var attr in attributes)
+            if (attributes.Count == 0)
             {
-                sb.Append($"{attr.Key}={attr.Value},");
+                return string.Empty;
             }
 
-            sb.Append("]");
-
-            return sb.ToString();
+            return " [" + string.Join(", ", attributes.Select(a => $"{a.Key}={a.Value}")) + "]";
         }
 
-        private IDictionary<string, string> GetAttributes()
+        /// <summary>
+        /// Every set attribute, rendered and sorted by name, so the same element always produces
+        /// the same text.
+        /// </summary>
+        internal IReadOnlyList<KeyValuePair<string, string>> GetAttributes()
         {
-            Dictionary<string, string> attributes = new Dictionary<string, string>();
+            var attributes = new SortedDictionary<string, string>(StringComparer.Ordinal);
 
-            var propertyInfos = this.GetType().GetProperties().Where(p => p.GetCustomAttributes(typeof(AttributeNameAttribute), true).Any());
-
-            foreach (var propertyInfo in propertyInfos)
+            foreach (var property in GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                var attributeName = ((AttributeNameAttribute)propertyInfo.GetCustomAttributes(typeof(AttributeNameAttribute), true).Single()).Name;
-                string? attrbuteValue = null;
-
-                var value = propertyInfo.GetValue(this);
-
-                if (value != null)
+                var nameAttribute = property.GetCustomAttribute<AttributeNameAttribute>(true);
+                if (nameAttribute is null)
                 {
-                    // Underlying type if nullable, or just the type if not.
-                    var underlyingType = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+                    continue;
+                }
 
-                    if (underlyingType != null && underlyingType.IsEnum)
-                    {
-                        if (underlyingType == typeof(Color))
-                        {
-                            attrbuteValue = (value.ToString() ?? throw new ArgumentNullException()).ToLower().SurroundInQuotes();
-                        }
-                        else
-                        {
-                            attrbuteValue = ((Enum)value).GetDisplayValue().SurroundInQuotes();
-                        }
-                    }
-                    else if (underlyingType == typeof(bool))
-                    {
-                        attrbuteValue = (value.ToString() ?? throw new ArgumentNullException()).ToLower().SurroundInQuotes();
-                    }
-                    else if (underlyingType == typeof(Label) || value.GetType() == typeof(Label))
-                    {
-                        var tempVal = (Label)value;
-                        attrbuteValue = (tempVal.ToString() ?? throw new ArgumentNullException()).SurroundInQuotes(!tempVal.IsHtml);
-                    }
-                    else
-                    {
-                        attrbuteValue = ((value.ToString() ?? throw new ArgumentNullException()).SurroundInQuotes() ?? throw new ArgumentNullException());
-                    }
-
-                    if (attrbuteValue is not null)
-                    {
-                        attributes.Add(attributeName, attrbuteValue);
-                    }
+                var value = property.GetValue(this);
+                if (value is not null)
+                {
+                    attributes[nameAttribute.Name] = FormatValue(value);
                 }
             }
 
-            return attributes;
+            foreach (var extra in Attributes)
+            {
+                attributes[extra.Key] = DotString.Quote(extra.Value);
+            }
+
+            return attributes.ToList();
         }
+
+        internal static string FormatValue(object value) => value switch
+        {
+            Label label => label.ToDot(),
+            Color color => DotString.Quote(color.ToString().ToLowerInvariant()),
+            Enum e => DotString.Quote(e.GetDisplayValue()),
+            bool b => b ? "true" : "false",
+            double d => DotString.FormatNumber(d),
+            float f => DotString.FormatNumber(f),
+            int i => i.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            string s => DotString.Quote(s),
+            _ => DotString.Quote(Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty),
+        };
 
         #endregion Methods
     }

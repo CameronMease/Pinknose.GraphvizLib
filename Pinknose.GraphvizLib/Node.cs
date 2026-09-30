@@ -1,7 +1,7 @@
-﻿/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 // MIT License
 //
-// Copyright(c) 2022 Cameron Mease
+// Copyright(c) 2022-2026 Cameron Mease
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,51 +30,57 @@ namespace Pinknose.GraphvizLib
 {
     public sealed class Node : GraphvizElement
     {
-        #region Properties
-
-        [AttributeName("color")]
-        public Color? Color { get; set; } = null;
-
-        [AttributeName("fillcolor")]
-        public Color? FillColor { get; set; } = null;
-
-        [AttributeName("fixedsize")]
-        public bool? FixedSize { get; set; } = null;
-
-        [AttributeName("fontcolor")]
-        public Color? FontColor { get; set; } = null;
-
-        [AttributeName("c")]
-        public double LineWidth { get; set; } = 1.0;
-
-        [AttributeName("shape")]
-        public Shape? Shape { get; set; } = null;
-
-        [AttributeName("style")]
-        public NodeStyle? Style { get; set; } = null;
-
-        [AttributeName("width")]
-        public double? Width { get; set; } = null;
-
-        #endregion Properties
-
-        #region Methods
+        #region Constructors
 
         public Node(HtmlImageCache? imageCache = null) : base(imageCache)
         {
         }
 
+        #endregion Constructors
+
+        #region Properties
+
+        [AttributeName("color")]
+        public Color? Color { get; set; }
+
+        [AttributeName("fillcolor")]
+        public Color? FillColor { get; set; }
+
+        [AttributeName("fixedsize")]
+        public bool? FixedSize { get; set; }
+
+        /// <summary>Height in inches.</summary>
+        [AttributeName("height")]
+        public double? Height { get; set; }
+
+        /// <summary>Width of the node's outline, in points.</summary>
+        [AttributeName("penwidth")]
+        public double? LineWidth { get; set; }
+
+        /// <summary>Space around the label, in inches.</summary>
+        [AttributeName("margin")]
+        public double? Margin { get; set; }
+
+        [AttributeName("shape")]
+        public Shape? Shape { get; set; }
+
+        [AttributeName("style")]
+        public NodeStyle? Style { get; set; }
+
+        /// <summary>Width in inches.</summary>
+        [AttributeName("width")]
+        public double? Width { get; set; }
+
+        #endregion Properties
+
+        #region Methods
+
         internal override Dot RenderDot(Graph graph, int indent)
         {
-            string indentText = new(' ', indent);
+            var sb = new StringBuilder();
+            sb.Append(' ', indent).Append(QuotedName).Append(RenderSingleLineAttributes()).AppendLine(";");
 
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append($"{indentText}{this.Id} ");
-
-            sb.AppendLine($"{this.RenderSingleLineAttributes()};");
-
-            return new(sb.ToString(), this.HtmlImageCache);
+            return new Dot(sb.ToString(), HtmlImageCache);
         }
 
         #endregion Methods
